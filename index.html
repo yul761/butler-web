@@ -235,6 +235,18 @@
     .layer { padding: 14px; }
   }
 
+  /* ---------- now ---------- */
+  .now-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .now-copy { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 28px; }
+  .now-copy p { margin: 0; font-size: 15px; line-height: 1.65; }
+  .shot { position: relative; margin: 0; }
+  .shot img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line-2); box-shadow: 0 24px 60px rgba(0,0,0,.45); background: #f6f6f4; }
+  .shot .badge { position: absolute; top: -13px; right: 18px; z-index: 1; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px;
+    background: rgba(7,9,14,.82); color: var(--amber); border: 1px solid rgba(240,207,110,.45); }
+  .sec .shot figcaption { margin-top: 10px; font-size: 13.5px; color: var(--muted); }
+  @media (max-width: 980px) { .now-copy { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 560px) { .shot .badge { position: static; display: inline-block; margin-bottom: 10px; } }
+
   /* ---------- footer ---------- */
   .site-foot { position: relative; z-index: 1; max-width: 1120px; margin: 96px auto 0; padding: 28px 24px 40px; border-top: 1px solid var(--line);
     display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; font-size: 13.5px; color: var(--muted); }
@@ -420,6 +432,20 @@
 
 <section class="sec" id="now">
   <p class="kicker"><span class="zh">「现在」页</span><span class="en">The Now page</span></p>
+  <h2><span class="zh">打开 Butler，先看到的是需要你的</span><span class="en">Open Butler and see what needs you first</span></h2>
+  <div class="now-grid">
+    <div class="now-copy">
+      <p><span class="zh">首页「现在」列出 Butler 开的每一个 session，按 epic、feature、ticket 分组。每一行写着它此刻在做什么：写代码（哪个文件）、跑测试、等 CI、思考中，后面是它的 PR 和 CI，以及这个状态持续了多久。</span><span class="en">The home page, Now, lists every session Butler opened, grouped by epic, feature and ticket. Each row says what the session is doing right now (writing code and in which file, running tests, watching CI, thinking), followed by its PR and CI and how long it has been at it.</span></p>
+      <p><span class="zh">等你的 session 置顶在「需要你」里，原因只有三种：它问了你一个问题、它停在权限确认上、或者它卡住了。侧栏的「现在」后面会显示有几个。</span><span class="en">Sessions waiting on you are pinned at the top under Needs you, for one of three reasons: they asked you a question, they stopped on a permission prompt, or they are stuck. The sidebar shows how many there are.</span></p>
+      <p><span class="zh">点一行就打开它的终端，接手、回答或者批准都在那里。没在干活的 session 会折起来，页面底部有一行近 7 天的 token 用量。</span><span class="en">Click a row to open its terminal, where you take over, answer or approve. Idle sessions fold away, and the bottom of the page has one line of token usage for the last 7 days.</span></p>
+    </div>
+    <figure class="shot">
+      <span class="badge"><span class="zh">演示数据</span><span class="en">Demo data</span></span>
+      <a class="zh" href="assets/now-zh.webp" target="_blank" rel="noopener"><img src="assets/now-zh.webp" width="1600" height="1158" loading="lazy" alt="Butler 的「现在」页：需要你的两个 session 置顶，下面按 epic 和 feature 分组列出每个 session 在做什么"></a>
+      <a class="en" href="assets/now-en.webp" target="_blank" rel="noopener"><img src="assets/now-en.webp" width="1600" height="1158" loading="lazy" alt="Butler's Now page: two sessions that need you pinned at the top, then every session grouped by epic and feature with what it is doing"></a>
+      <figcaption><span class="zh">真实的 Butler 界面；epic、feature、ticket 是通过 Butler 自己建出来的，session 的状态和用量是演示数据。</span><span class="en">The real Butler UI. The epic, features and tickets were created through Butler itself; the session states and usage are demo data.</span></figcaption>
+    </figure>
+  </div>
 </section>
 
 <section class="sec" id="usage">

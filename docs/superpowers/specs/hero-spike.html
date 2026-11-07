@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="zh-CN" class="is-zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Butler</title>
+<style>
+  :root {
+    --bg: #07090e;
+    --ink: #eef1f7;
+    --muted: #8a93a6;
+    --blue: #2f6fdf;
+    --blue-hi: #6b9cf0;
+    --green: #4ade80;
+    --amber: #f0cf6e;
+    --term: rgba(16, 19, 27, 0.82);
+    --line: rgba(255, 255, 255, 0.08);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden; min-height: 100vh;
+  }
+  html.is-en .zh, html.is-zh .en { display: none !important; }
+
+  .bgfx { position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(ellipse 50% 40% at 50% 62%, rgba(47,111,223,.22), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(107,156,240,.10), transparent 60%);
+  }
+  .grid { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .5;
+    background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 55%, #000 20%, transparent 75%);
+            mask-image: radial-gradient(ellipse 70% 60% at 50% 55%, #000 20%, transparent 75%);
+  }
+
+  header { position: relative; z-index: 2; max-width: 1240px; margin: 0 auto; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: var(--ink); text-decoration: none; }
+  .brand svg { width: 28px; height: 28px; }
+  .right { display: flex; gap: 14px; align-items: center; }
+  .gh { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600; display: flex; gap: 6px; align-items: center; }
+  .gh:hover { color: var(--ink); }
+  .gh svg { width: 17px; height: 17px; }
+  .lang { display: flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: rgba(255,255,255,.03); }
+  .lang button { border: 0; background: transparent; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--muted); padding: 4px 11px; border-radius: 999px; cursor: pointer; }
+  html.is-en .lang [data-lang="en"], html.is-zh .lang [data-lang="zh"] { background: var(--ink); color: var(--bg); }
+
+  .hero { position: relative; z-index: 1; text-align: center; padding: 14px 24px 0; max-width: 980px; margin: 0 auto; }
+  .eyebrow { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 600; color: var(--blue-hi);
+    border: 1px solid rgba(107,156,240,.3); background: rgba(47,111,223,.08); padding: 5px 12px; border-radius: 999px; margin-bottom: 16px; }
+  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
+  h1 { font-size: clamp(34px, 4.8vw, 60px); line-height: 1.06; letter-spacing: -0.035em; margin: 0 0 16px; font-weight: 800; }
+  html.is-zh h1 { letter-spacing: -0.01em; line-height: 1.16; }
+  h1 .hl { background: linear-gradient(92deg, #9cc0ff 0%, #6b9cf0 40%, #8ef0b8 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lede { font-size: clamp(16px, 1.7vw, 19px); color: #aab3c5; line-height: 1.6; margin: 0 auto 22px; max-width: 40em; }
+  .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cta { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; font-weight: 700; font-size: 15.5px; padding: 13px 22px; border-radius: 999px; transition: transform .15s, box-shadow .15s, background .15s; }
+  .cta svg { width: 17px; height: 17px; }
+  .cta.primary { background: var(--blue); color: #fff; box-shadow: 0 8px 30px rgba(47,111,223,.45), inset 0 1px 0 rgba(255,255,255,.2); }
+  .cta.primary:hover { transform: translateY(-1px); box-shadow: 0 10px 38px rgba(47,111,223,.6); }
+  .cta.ghost { color: var(--ink); border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.03); }
+  .cta.ghost:hover { background: rgba(255,255,255,.07); }
+  .fine { margin: 14px 0 0; font-size: 13px; color: var(--muted); }
+
+  /* ---------- stage ---------- */
+  .stage { position: relative; z-index: 1; max-width: 1240px; margin: 26px auto 0; padding: 0 24px 60px;
+    display: grid; grid-template-columns: minmax(0, 1fr) 300px minmax(0, 1fr); gap: 0 64px; align-items: center; }
+  .col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  svg.wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: visible; }
+  .wire { fill: none; stroke: rgba(107,156,240,.16); stroke-width: 1.2; stroke-dasharray: 3 5; transition: stroke .4s; }
+  .wire.hot { stroke: rgba(107,156,240,.75); stroke-dasharray: none; }
+  .wire.hot.read { stroke: rgba(126,224,168,.75); }
+
+  .term { position: relative; z-index: 1; min-width: 0; background: var(--term); border: 1px solid rgba(255,255,255,.09); border-radius: 11px;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35); transition: border-color .4s, box-shadow .4s, transform .4s; }
+  .term.write { border-color: rgba(107,156,240,.7); box-shadow: 0 0 0 1px rgba(107,156,240,.35), 0 0 32px rgba(47,111,223,.35); }
+  .term.read  { border-color: rgba(126,224,168,.7); box-shadow: 0 0 0 1px rgba(126,224,168,.3), 0 0 32px rgba(74,222,128,.25); }
+  .term.ask   { border-color: rgba(240,207,110,.8); box-shadow: 0 0 0 1px rgba(240,207,110,.35), 0 0 34px rgba(240,207,110,.28); }
+  .th { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-bottom: 1px solid rgba(255,255,255,.06); font-size: 11.5px; }
+  .lights { display: flex; gap: 4px; } .lights i { width: 7px; height: 7px; border-radius: 50%; background: #2a2f3b; display: block; }
+  .tid { font-weight: 700; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11.5px; }
+  .repo { color: var(--muted); font-size: 11px; }
+  .pill { margin-left: auto; font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: rgba(74,222,128,.12); color: #7ee0a8; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
+  .pill::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: blink 1.4s infinite; }
+  .pill.ci { background: rgba(201,179,245,.12); color: #c9b3f5; }
+  .pill.think { background: rgba(107,156,240,.12); color: var(--blue-hi); }
+  .pill.ask { background: rgba(240,207,110,.16); color: var(--amber); }
+  @keyframes blink { 50% { opacity: .3; } }
+  .tb { height: 74px; padding: 6px 11px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11.5px; line-height: 16px; color: #b9c0cf; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; }
+  .tb div { flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tb .tool { color: #e6e9f0; } .tb .tool b { color: var(--blue-hi); font-weight: 600; }
+  .tb .ok { color: #7ee0a8; } .tb .dim { color: #6b7385; }
+  .tb .mem-w { color: #9cc0ff; } .tb .mem-r { color: #8ef0b8; } .tb .q { color: var(--amber); }
+  .caret { display: inline-block; width: 6px; height: 12px; background: #b9c0cf; vertical-align: -2px; margin-left: 1px; animation: blink 1s steps(1) infinite; }
+
+  .core { position: relative; z-index: 1; border-radius: 18px; padding: 16px 16px 14px;
+    background: linear-gradient(180deg, rgba(47,111,223,.22), rgba(47,111,223,.08)); border: 1px solid rgba(107,156,240,.45);
+    box-shadow: 0 0 60px rgba(47,111,223,.35), inset 0 1px 0 rgba(255,255,255,.08); }
+  .core::before { content: ""; position: absolute; inset: -1px; border-radius: 18px; pointer-events: none; box-shadow: 0 0 0 0 rgba(107,156,240,.6); }
+  .core.pulse::before { animation: ring .9s ease-out; }
+  @keyframes ring { from { box-shadow: 0 0 0 0 rgba(107,156,240,.7); } to { box-shadow: 0 0 0 22px rgba(107,156,240,0); } }
+  .core h3 { margin: 0; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .core h3 .orb { width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff, #6b9cf0 50%, #2f6fdf); box-shadow: 0 0 14px #6b9cf0; }
+  .core .sub { font-size: 11.5px; color: #9aa6bd; margin: 4px 0 12px; }
+  .notes { display: flex; flex-direction: column; gap: 7px; min-height: 236px; }
+  .note { background: rgba(7,9,14,.55); border: 1px solid rgba(255,255,255,.07); border-radius: 9px; padding: 7px 9px; font-size: 12px; line-height: 1.45; color: #dfe5f1;
+    animation: drop .55s cubic-bezier(.2,.9,.3,1.2); }
+  .note .src { display: block; font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: var(--blue-hi); margin-bottom: 2px; }
+  .note.fresh { border-color: rgba(107,156,240,.6); background: rgba(47,111,223,.18); }
+  @keyframes drop { from { opacity: 0; transform: translateY(-10px) scale(.96); } }
+  .core .foot { display: flex; justify-content: space-between; font-size: 10.5px; color: #7d89a1; margin-top: 10px; }
+
+  .needs { position: absolute; z-index: 3; top: -46px; left: 50%; transform: translateX(-50%) translateY(6px); opacity: 0; transition: opacity .35s, transform .35s;
+    background: rgba(240,207,110,.14); color: var(--amber); border: 1px solid rgba(240,207,110,.45); font-size: 12.5px; font-weight: 700; padding: 6px 13px; border-radius: 999px; white-space: nowrap; }
+  .needs.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .spark { position: absolute; z-index: 4; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; pointer-events: none;
+    background: #fff; box-shadow: 0 0 10px 3px #6b9cf0, 0 0 26px 8px rgba(47,111,223,.6); }
+  .spark.g { box-shadow: 0 0 10px 3px #7ee0a8, 0 0 26px 8px rgba(74,222,128,.5); }
+  .spark.t { width: 6px; height: 6px; margin: -3px 0 0 -3px; opacity: .45; }
+
+  @media (max-width: 980px) {
+    .stage { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+    .core { grid-column: 1 / -1; order: -1; margin-bottom: 8px; }
+    .notes { min-height: 0; }
+    .col { display: contents; }
+    .term:nth-child(n+3) { display: none; }
+    svg.wires { display: none; }
+    .needs { top: -40px; }
+  }
+  @media (max-width: 560px) {
+    .stage { grid-template-columns: minmax(0, 1fr); padding: 0 16px 40px; }
+    header, .hero { padding-left: 16px; padding-right: 16px; }
+    .gh span { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="bgfx"></div><div class="grid"></div>
+
+<header>
+  <a class="brand" href="#">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <rect x="2" y="2" width="96" height="96" rx="24" fill="#2f6fdf"/>
+      <rect x="44" y="21" width="34" height="41" rx="7" fill="#8bb0f6"/>
+      <rect x="35" y="30" width="34" height="41" rx="7" fill="#dbe6fb" opacity=".95"/>
+      <rect x="26" y="39" width="34" height="41" rx="7" fill="#fff"/>
+      <rect x="32" y="46" width="14" height="6" rx="3" fill="#2f6fdf"/>
+      <rect x="32" y="57" width="22" height="3.5" rx="1.75" fill="#b9c6db"/>
+      <rect x="32" y="63.5" width="15" height="3.5" rx="1.75" fill="#b9c6db"/>
+      <circle cx="53.5" cy="73" r="3.6" fill="#2e9e6a"/>
+    </svg>
+    Butler
+  </a>
+  <div class="right">
+    <a class="gh" href="https://github.com/yul761/butler">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span>GitHub</span>
+    </a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="zh">中文</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow"><span class="dot"></span>
+    <span class="zh">开源 · 给同时开很多个 Claude Code 的人</span>
+    <span class="en">Open source · for people who run many Claude Code sessions</span>
+  </div>
+  <h1>
+    <span class="zh">一群 Claude Code 同时开工，<br><span class="hl">谁做了什么，大家都知道。</span></span>
+    <span class="en">Many Claude Code sessions.<br><span class="hl">One shared memory.</span></span>
+  </h1>
+  <p class="lede">
+    <span class="zh">Butler 给每个 Jira ticket 开一个 Claude Code session，让它们共用一份本地记忆。后端记下的接口改动，前端 session 读得到；哪个 session 需要你拍板，它会先叫你。</span>
+    <span class="en">Butler gives every Jira ticket its own Claude Code session and lets them share one local memory. What the backend session writes down, the frontend session reads. When one of them needs you, you hear about it first.</span>
+  </p>
+  <div class="ctas">
+    <a class="cta primary" href="https://github.com/yul761/butler/releases/latest">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
+      <span class="zh">下载 macOS / Windows 版</span><span class="en">Download for macOS / Windows</span>
+    </a>
+    <a class="cta ghost" href="https://github.com/yul761/butler">
+      <span class="zh">在 GitHub 上看源码</span><span class="en">View source on GitHub</span>
+    </a>
+  </div>
+  <p class="fine">
+    <span class="zh">MIT 开源 · 数据只存在你自己的电脑上 · 用你自己登录的 claude</span>
+    <span class="en">MIT licensed · your data stays on your machine · runs your own logged-in claude</span>
+  </p>
+</section>
+
+<section class="stage" id="stage">
+  <svg class="wires" id="wires"></svg>
+  <div class="col" id="left"></div>
+  <div class="core" id="core">
+    <div class="needs" id="needs"><span class="zh">⚑ 需要你 · 1</span><span class="en">⚑ Needs you · 1</span></div>
+    <h3><span class="orb"></span><span class="zh">共享记忆 · 结账改版</span><span class="en">Shared memory · Checkout revamp</span></h3>
+    <div class="sub"><span class="zh">feature 级 · 存在本地 StateCore</span><span class="en">feature scope · local StateCore</span></div>
+    <div class="notes" id="notes"></div>
+    <div class="foot"><span id="count"></span><span class="zh">8 个 session 在跑</span><span class="en">8 sessions running</span></div>
+  </div>
+  <div class="col" id="right"></div>
+</section>
+
+<script>
+(function () {
+  // ---------- language ----------
+  var lang = /^zh/i.test(navigator.language || "") ? "zh" : "en";
+  try { var q = new URLSearchParams(location.search).get("lang"); if (q === "en" || q === "zh") lang = q; } catch (e) {}
+  function setLang(l) {
+    lang = l;
+    var r = document.documentElement;
+    r.classList.remove("is-en", "is-zh"); r.classList.add("is-" + l); r.lang = l === "zh" ? "zh-CN" : "en";
+    renderNotes();
+    terms.forEach(function (t) { setPill(t, t.pillKind); });
+  }
+  document.querySelectorAll(".lang button").forEach(function (b) {
+    b.addEventListener("click", function () { setLang(b.getAttribute("data-lang")); });
+  });
+  function T(o) { return typeof o === "string" ? o : o[lang]; }
+
+  // ---------- sessions ----------
+  var PILL = {
+    code:  { zh: "写代码",   en: "writing code" },
+    read:  { zh: "读代码",   en: "reading code" },
+    test:  { zh: "跑测试",   en: "running tests" },
+    ci:    { zh: "等 CI",    en: "watching CI" },
+    think: { zh: "思考中",   en: "thinking" },
+    ask:   { zh: "需要你",   en: "needs you" }
+  };
+  var SESS = [
+    { id: "CART-12", repo: "api",  side: "left",  pill: "code",
+      pool: [["tool","Edit","src/cart/routes.ts (+31 −9)","code"],["tool","Read","src/cart/totals.ts","read"],["tool","Bash","npm test -- cart","test"],["ok","  ✓ 38 passed","","test"],["dim","✻ Thinking…","","think"]] },
+    { id: "CART-15", repo: "api",  side: "left",  pill: "ci",
+      pool: [["tool","Bash","gh pr checks 131","ci"],["dim","  ◌ build · running 3m","","ci"],["tool","Edit","src/coupon/stack.ts (+12 −4)","code"],["ok","  ✓ lint · types","","ci"],["tool","Bash","git push","ci"]] },
+    { id: "PAY-3",   repo: "api",  side: "left",  pill: "think",
+      pool: [["dim","✻ Thinking…","","think"],["tool","Read","src/pay/webhook.ts","read"],["tool","Edit","src/pay/webhook.ts (+22 −15)","code"],["tool","Grep","\"idempotency_key\"","read"],["tool","Bash","npm test -- pay","test"]] },
+    { id: "PAY-6",   repo: "api",  side: "left",  pill: "read",
+      pool: [["tool","Read","src/pay/refund.ts","read"],["tool","Grep","\"onNotify\"","read"],["tool","Edit","src/pay/refund.ts (+8 −3)","code"],["ok","  ✓ 17 passed","","test"],["dim","✻ Thinking…","","think"]] },
+    { id: "CART-13", repo: "web",  side: "right", pill: "code",
+      pool: [["tool","Edit","CartSummary.tsx (+18 −6)","code"],["tool","Read","hooks/useCart.ts","read"],["tool","Bash","pnpm vitest cart","test"],["ok","  ✓ 24 passed","","test"],["dim","✻ Thinking…","","think"]] },
+    { id: "CART-14", repo: "web",  side: "right", pill: "test",
+      pool: [["tool","Bash","pnpm playwright test checkout","test"],["dim","  ◌ 11/14 specs","","test"],["ok","  ✓ 14 passed","","test"],["tool","Edit","CheckoutPage.tsx (+5 −2)","code"],["tool","Bash","git push","ci"]] },
+    { id: "PAY-4",   repo: "web",  side: "right", pill: "code",
+      pool: [["tool","Edit","usePriceBreakdown.ts (+14 −11)","code"],["tool","Read","components/Coupon.tsx","read"],["tool","Bash","pnpm vitest price","test"],["ok","  ✓ 9 passed","","test"],["dim","✻ Thinking…","","think"]] },
+    { id: "CART-16", repo: "api",  side: "right", pill: "code",
+      pool: [["tool","Write","migrations/0042_order_totals.sql","code"],["tool","Read","db/schema.ts","read"],["tool","Bash","npm run db:check","test"],["ok","  ✓ schema ok","","test"],["dim","✻ Thinking…","","think"]] }
+  ];
+
+  var terms = [];
+  SESS.forEach(function (s) {
+    var el = document.createElement("div");
+    el.className = "term";
+    el.innerHTML = '<div class="th"><span class="lights"><i></i><i></i><i></i></span><span class="tid">' + s.id + '</span><span class="repo">' + s.repo + '</span><span class="pill"></span></div><div class="tb"></div>';
+    document.getElementById(s.side).appendChild(el);
+    var t = { s: s, el: el, body: el.querySelector(".tb"), pillEl: el.querySelector(".pill"), queue: [], cur: null, idle: 400 + Math.random() * 1600, busy: false, pi: Math.floor(Math.random() * s.pool.length) };
+    terms.push(t);
+    setPill(t, s.pill);
+    // seed a couple of finished lines so nothing starts empty
+    for (var k = 0; k < 3; k++) { var p = s.pool[(t.pi + k) % s.pool.length]; appendLine(t, lineHTML(p[0], p[1], p[2]), true); }
+  });
+  function byId(id) { return terms.filter(function (t) { return t.s.id === id; })[0]; }
+
+  function setPill(t, kind) {
+    t.pillKind = kind;
+    t.pillEl.className = "pill" + (kind === "ci" ? " ci" : kind === "think" ? " think" : kind === "ask" ? " ask" : "");
+    t.pillEl.textContent = PILL[kind][lang];
+  }
+  function esc(x) { return String(x).replace(/[&<>]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; }); }
+  function lineHTML(kind, a, b) {
+    if (kind === "tool") return '<span class="tool">⏺ <b>' + esc(a) + '</b> ' + esc(b) + '</span>';
+    return '<span class="' + kind + '">' + esc(a) + '</span>';
+  }
+  function appendLine(t, html, done) {
+    var d = document.createElement("div");
+    d.innerHTML = html;
+    t.body.appendChild(d);
+    while (t.body.children.length > 6) t.body.removeChild(t.body.firstChild);
+    return d;
+  }
+
+  // Typing: reveal a line's text a few characters per tick.
+  function startTyping(t, item) {
+    var d = appendLine(t, "");
+    var probe = document.createElement("div"); probe.innerHTML = item.html;
+    var full = probe.textContent;
+    t.cur = { d: d, html: item.html, full: full, n: 0, cls: (probe.firstChild && probe.firstChild.className) || "", done: item.done };
+    if (item.pill) setPill(t, item.pill);
+  }
+  function tick(dt) {
+    terms.forEach(function (t) {
+      if (t.cur) {
+        t.cur.n += 2 + Math.floor(Math.random() * 3);
+        if (t.cur.n >= t.cur.full.length) {
+          t.cur.d.innerHTML = t.cur.html;
+          var c = t.cur; t.cur = null;
+          t.idle = 500 + Math.random() * 1800;
+          if (c.done) c.done();
+        } else {
+          t.cur.d.innerHTML = '<span class="' + t.cur.cls + '">' + esc(t.cur.full.slice(0, t.cur.n)) + '</span><span class="caret"></span>';
+        }
+        return;
+      }
+      if (t.queue.length) { startTyping(t, t.queue.shift()); return; }
+      if (t.busy) return;
+      t.idle -= dt;
+      if (t.idle <= 0) {
+        var p = t.s.pool[t.pi++ % t.s.pool.length];
+        startTyping(t, { html: lineHTML(p[0], p[1], p[2]), pill: p[3] });
+      }
+    });
+  }
+
+  // ---------- shared memory ----------
+  var notes = [
+    { src: "PAY-6", text: { zh: "退款只走原支付渠道", en: "Refunds go back to the original payment method" } },
+    { src: "CART-14", text: { zh: "结账页 e2e 用 seed 数据 checkout-basic", en: "Checkout e2e uses the checkout-basic seed" } },
+    { src: "CART-12", text: { zh: "购物车 v1 接口下周停用", en: "Cart v1 endpoints retire next week" } }
+  ];
+  var freshIdx = -1, total = 23;
+  function renderNotes() {
+    var box = document.getElementById("notes"); box.innerHTML = "";
+    notes.slice(0, 4).forEach(function (n, i) {
+      var d = document.createElement("div");
+      d.className = "note" + (i === 0 && freshIdx === 0 ? " fresh" : "");
+      d.innerHTML = '<span class="src">' + n.src + '</span>' + esc(T(n.text));
+      box.appendChild(d);
+    });
+    document.getElementById("count").textContent = (lang === "zh" ? total + " 条记忆" : total + " notes");
+  }
+  renderNotes();
+
+  var EVENTS = [
+    { from: "CART-12", to: "CART-13",
+      note: { zh: "购物车接口改为 /v2，响应里带 totals", en: "Cart API is now /v2 and returns totals" },
+      recall: { zh: "后端已改 /v2，直接返回 totals", en: "backend moved to /v2, totals included" },
+      follow: ["tool", "Edit", "CartSummary.tsx — use totals, drop local sum"] },
+    { from: "CART-15", to: "PAY-4",
+      note: { zh: "优惠叠加：先满减，再打折", en: "Coupons stack: fixed-amount first, then percent" },
+      recall: { zh: "优惠先满减再打折", en: "fixed-amount first, then percent" },
+      follow: ["tool", "Edit", "usePriceBreakdown.ts — reorder discounts"] },
+    { from: "PAY-3", to: "PAY-6",
+      note: { zh: "支付回调已幂等，重复通知直接回 200", en: "Payment webhook is idempotent; duplicates get 200" },
+      recall: { zh: "回调已幂等，重复通知直接回 200", en: "webhook idempotent, duplicates → 200" },
+      follow: ["tool", "Edit", "refund.ts — remove duplicate-notify guard"] },
+    { from: "CART-13", to: "PAY-3",
+      note: { zh: "金额一律用「分」的整数传给后端", en: "Amounts are sent as integer cents" },
+      recall: { zh: "前端金额按分传整数", en: "frontend sends integer cents" },
+      follow: ["tool", "Edit", "webhook.ts — parse amount as cents"] },
+    { from: "CART-14", to: "CART-16",
+      note: { zh: "PR #128 已合并，main 上有新的 orders 表结构", en: "PR #128 merged; main has the new orders schema" },
+      recall: { zh: "#128 已合并，先 rebase", en: "#128 merged — rebase first" },
+      follow: ["tool", "Bash", "git rebase origin/main"] }
+  ];
+
+  // ---------- wires + sparks ----------
+  var stage = document.getElementById("stage"), svg = document.getElementById("wires"), core = document.getElementById("core");
+  var NS = "http://www.w3.org/2000/svg";
+  function rel(el) { var a = el.getBoundingClientRect(), b = stage.getBoundingClientRect(); return { x: a.left - b.left, y: a.top - b.top, w: a.width, h: a.height }; }
+  function anchors(t) {
+    var r = rel(t.el), c = rel(core), left = t.s.side === "left";
+    var p0 = { x: left ? r.x + r.w : r.x, y: r.y + r.h / 2 };
+    var p3 = { x: left ? c.x : c.x + c.w, y: c.y + c.h / 2 + (p0.y - (c.y + c.h / 2)) * 0.35 };
+    var dx = (p3.x - p0.x) * 0.55;
+    return [p0, { x: p0.x + dx, y: p0.y }, { x: p3.x - dx, y: p3.y }, p3];
+  }
+  function layoutWires() {
+    svg.innerHTML = "";
+    terms.forEach(function (t) {
+      var a = anchors(t), p = document.createElementNS(NS, "path");
+      p.setAttribute("d", "M" + a[0].x + " " + a[0].y + " C" + a[1].x + " " + a[1].y + " " + a[2].x + " " + a[2].y + " " + a[3].x + " " + a[3].y);
+      p.setAttribute("class", "wire"); svg.appendChild(p); t.wire = p;
+    });
+  }
+  function bez(a, k) {
+    var u = 1 - k;
+    return { x: u*u*u*a[0].x + 3*u*u*k*a[1].x + 3*u*k*k*a[2].x + k*k*k*a[3].x, y: u*u*u*a[0].y + 3*u*u*k*a[1].y + 3*u*k*k*a[2].y + k*k*k*a[3].y };
+  }
+  function wiresVisible() { return getComputedStyle(svg).display !== "none"; }
+  function fly(t, toCore, green, done) {
+    if (!wiresVisible()) { setTimeout(done, 350); return; }
+    var a = anchors(t), dur = 1100, t0 = performance.now();
+    t.wire.classList.add("hot"); if (green) t.wire.classList.add("read");
+    var dots = [0, 1, 2, 3].map(function (i) { var s = document.createElement("div"); s.className = "spark" + (green ? " g" : "") + (i ? " t" : ""); stage.appendChild(s); return s; });
+    function step(now) {
+      var k = Math.min(1, (now - t0) / dur);
+      dots.forEach(function (s, i) {
+        var kk = Math.max(0, k - i * 0.045); kk = kk < .5 ? 2*kk*kk : 1 - Math.pow(-2*kk + 2, 2) / 2;
+        var p = bez(a, toCore ? kk : 1 - kk); s.style.left = p.x + "px"; s.style.top = p.y + "px";
+      });
+      if (k < 1) requestAnimationFrame(step);
+      else { dots.forEach(function (s) { s.remove(); }); setTimeout(function () { t.wire.classList.remove("hot", "read"); }, 500); done(); }
+    }
+    requestAnimationFrame(step);
+  }
+  function pulse() { core.classList.remove("pulse"); void core.offsetWidth; core.classList.add("pulse"); }
+
+  // ---------- choreography ----------
+  var ei = 0;
+  function memoryEvent() {
+    var e = EVENTS[ei++ % EVENTS.length], src = byId(e.from), dst = byId(e.to);
+    src.busy = true; dst.busy = true;
+    src.queue.push({ html: '<span class="mem-w">⏺ remember("' + esc(T(e.note)) + '")</span>', pill: "code", done: function () {
+      src.el.classList.add("write");
+      fly(src, true, false, function () {
+        src.el.classList.remove("write"); src.busy = false;
+        notes.unshift({ src: e.from, text: e.note }); notes = notes.slice(0, 6); freshIdx = 0; total++; renderNotes(); pulse();
+        setTimeout(function () {
+          dst.el.classList.add("read");
+          fly(dst, false, true, function () {
+            dst.queue.push({ html: '<span class="mem-r">⏺ recall → ' + esc(T(e.recall)) + '</span>', pill: "read", done: function () {
+              dst.queue.push({ html: lineHTML(e.follow[0], e.follow[1], e.follow[2]), pill: "code", done: function () {
+                dst.el.classList.remove("read"); dst.busy = false; freshIdx = -1; renderNotes();
+              } });
+            } });
+          });
+        }, 700);
+      });
+    } });
+  }
+
+  var askOn = false;
+  function askEvent() {
+    var cands = terms.filter(function (t) { return !t.busy; }); if (!cands.length) return;
+    var t = byId("CART-16"); if (t.busy) t = cands[Math.floor(Math.random() * cands.length)];
+    t.busy = true; askOn = true;
+    t.queue.push({ html: '<span class="q">? ' + (lang === "zh" ? "迁移会锁 orders 表约 2 秒，继续吗？(y/n)" : "Migration locks orders for ~2s. Continue? (y/n)") + '</span>', pill: "ask", done: function () {
+      t.el.classList.add("ask"); document.getElementById("needs").classList.add("on");
+      setTimeout(function () {
+        t.el.classList.remove("ask"); document.getElementById("needs").classList.remove("on");
+        t.queue.push({ html: '<span class="ok">✓ ' + (lang === "zh" ? "你确认了，继续" : "you approved — continuing") + '</span>', pill: "code", done: function () { t.busy = false; askOn = false; } });
+      }, 3600);
+    } });
+  }
+
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  setLang(lang);
+  layoutWires();
+  window.addEventListener("resize", layoutWires);
+  if (!reduce) {
+    var last = performance.now();
+    setInterval(function () { var now = performance.now(); tick(now - last); last = now; }, 45);
+    setTimeout(memoryEvent, 1600);
+    setInterval(memoryEvent, 6200);
+    setTimeout(function () { askEvent(); setInterval(askEvent, 15000); }, 9000);
+  }
+})();
+</script>
+</body>
+</html>

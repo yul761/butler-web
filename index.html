@@ -7,6 +7,15 @@
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#07090e">
+<meta name="description" content="Butler is an MIT-licensed desktop app for running many Claude Code sessions at once: one session per ticket, a shared layered memory, and a Now page that shows what needs you.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://butler.statecore.io/">
+<meta property="og:title" content="Butler — many Claude Code sessions, one shared memory">
+<meta property="og:description" content="A desktop app for running one Claude Code session per ticket, with a shared layered memory and a Now page that shows what needs you. macOS and Windows, MIT licensed.">
+<meta property="og:image" content="https://butler.statecore.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <script>
   // Pick the language before first paint: ?lang= wins, then a remembered choice, then the browser.
   (function () {
@@ -155,7 +164,7 @@
     html { scroll-behavior: auto; }
   }
   @media (max-width: 980px) {
-    .stage { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+    .stage { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; margin-top: 56px; }
     .core { grid-column: 1 / -1; order: -1; margin-bottom: 8px; }
     .notes { min-height: 0; }
     .col { display: contents; }
@@ -241,11 +250,72 @@
   .now-copy p { margin: 0; font-size: 15px; line-height: 1.65; }
   .shot { position: relative; margin: 0; }
   .shot img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line-2); box-shadow: 0 24px 60px rgba(0,0,0,.45); background: #f6f6f4; }
-  .shot .badge { position: absolute; top: -13px; right: 18px; z-index: 1; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px;
-    background: rgba(7,9,14,.82); color: var(--amber); border: 1px solid rgba(240,207,110,.45); }
+  .shot .badge { position: absolute; top: -13px; right: 18px; z-index: 1; }
   .sec .shot figcaption { margin-top: 10px; font-size: 13.5px; color: var(--muted); }
   @media (max-width: 980px) { .now-copy { grid-template-columns: minmax(0, 1fr); } }
   @media (max-width: 560px) { .shot .badge { position: static; display: inline-block; margin-bottom: 10px; } }
+
+  /* ---------- usage ---------- */
+  .badge { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: rgba(7,9,14,.82); color: var(--amber); border: 1px solid rgba(240,207,110,.45); }
+  .usage-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 36px; align-items: start; }
+  .usage-card { position: relative; background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 16px; padding: 24px 24px 22px; box-shadow: 0 24px 60px rgba(0,0,0,.35); }
+  .usage-card .badge { position: absolute; top: -13px; right: 18px; }
+  .u-head { display: flex; flex-direction: column; gap: 2px; }
+  .u-label { font-size: 13px; font-weight: 600; color: var(--muted); }
+  .u-big { font-size: clamp(40px, 5vw, 56px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .u-big small { font-size: .4em; font-weight: 600; letter-spacing: 0; color: var(--muted); margin-left: 4px; }
+  .u-stats { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 22px; }
+  .u-stats > span { font-size: 13.5px; color: var(--ink-2); padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line-2); background: rgba(255,255,255,.03); }
+  .u-stats b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .u-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; border-top: 1px solid var(--line); padding-top: 18px; }
+  .u-cols h3 { font-size: 13px; font-weight: 700; color: var(--muted); margin: 0 0 10px; }
+  .bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .bars li { position: relative; display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; color: var(--ink-2); padding-bottom: 7px; }
+  .bars li::before, .bars li::after { content: ""; position: absolute; left: 0; bottom: 0; height: 4px; border-radius: 4px; }
+  .bars li::before { right: 0; background: rgba(255,255,255,.06); }
+  .bars li::after { width: var(--v); background: var(--blue-2); }
+  .bars li span { min-width: 0; overflow-wrap: anywhere; }
+  .bars b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .mono { font-family: var(--mono); font-size: .92em; }
+  .usage-copy { display: grid; gap: 22px; }
+  .usage-copy .fact { border-top: 0; padding-top: 0; }
+
+  /* ---------- local ---------- */
+  .facts.six { margin-top: 0; gap: 26px 28px; }
+  .facts.six code.path { white-space: normal; overflow-wrap: anywhere; }
+
+  /* ---------- install ---------- */
+  .install-top { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px 40px; align-items: start; margin-bottom: 28px; }
+  .install-top .cta { justify-self: start; }
+  .req h3, .os h3 { font-size: 16px; margin: 0 0 8px; font-weight: 700; }
+  .req ul, .os ol { margin: 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14.5px; line-height: 1.65; }
+  .req li + li, .os li + li { margin-top: 4px; }
+  .os-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+  .os { background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; padding: 20px; min-width: 0; }
+  .os h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+  .os .file { font-family: var(--mono); font-size: 12.5px; font-weight: 500; color: var(--muted); overflow-wrap: anywhere; }
+  .os b { color: var(--ink); font-weight: 600; }
+  .cmd { display: flex; align-items: center; gap: 8px; margin: 12px 0 0; padding: 6px 6px 6px 14px; background: #04060a; border: 1px solid var(--line-2); border-radius: 10px; }
+  .cmd pre { flex: 1; min-width: 0; margin: 0; padding: 6px 0; overflow-x: auto; }
+  .cmd pre code { background: none; border: 0; padding: 0; font-size: 13px; color: var(--green-2); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .copy { flex: none; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--ink-2); background: rgba(255,255,255,.06);
+    border: 1px solid var(--line-2); border-radius: 7px; padding: 4px 10px; cursor: pointer; }
+  .copy:hover { color: var(--ink); background: rgba(255,255,255,.1); }
+  .sec .os p.os-note { margin: 12px 0 0; font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+
+  /* ---------- end ---------- */
+  #end { text-align: center; }
+  .sec p.end-line { font-size: clamp(20px, 2.4vw, 26px); font-weight: 700; color: var(--ink); margin: 0 0 22px; }
+
+  @media (max-width: 980px) {
+    .usage-grid, .os-grid, .install-top { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .usage-card { padding: 20px 16px 18px; }
+    .usage-card .badge { position: static; display: inline-block; margin-bottom: 12px; }
+    .u-cols { grid-template-columns: minmax(0, 1fr); }
+    .os { padding: 16px; }
+  }
 
   /* ---------- footer ---------- */
   .site-foot { position: relative; z-index: 1; max-width: 1120px; margin: 96px auto 0; padding: 28px 24px 40px; border-top: 1px solid var(--line);
@@ -450,17 +520,154 @@
 
 <section class="sec" id="usage">
   <p class="kicker"><span class="zh">Token 用量</span><span class="en">Token usage</span></p>
+  <h2><span class="zh">一行字，看出 token 花在了哪儿</span><span class="en">One line that shows where the tokens went</span></h2>
+  <p class="intro">
+    <span class="zh">一群 session 同时跑，最容易问的就是「这周用了多少，都用在哪了」。「现在」页最底下有一行近 7 天的用量，点开能看到按类型和按模型的拆分。</span>
+    <span class="en">With many sessions running at once, the obvious question is how much this week used, and on what. The bottom of the Now page has one line for the last 7 days; click it for the split by kind and by model.</span>
+  </p>
+  <div class="usage-grid">
+    <div class="usage-card">
+      <span class="badge"><span class="zh">示例数据</span><span class="en">Sample data</span></span>
+      <div class="u-head">
+        <span class="u-label"><span class="zh">近 7 天</span><span class="en">Last 7 days</span></span>
+        <span class="u-big">412.6M <small><span class="zh">token</span><span class="en">tokens</span></small></span>
+      </div>
+      <div class="u-stats">
+        <span><b>58%</b> <span class="zh">缓存读取</span><span class="en">cache reads</span></span>
+        <span><b>11%</b> <span class="zh">上下文超过 20 万的轮次</span><span class="en">turns over 200k context</span></span>
+      </div>
+      <div class="u-cols">
+        <div>
+          <h3><span class="zh">按类型</span><span class="en">By kind</span></h3>
+          <ul class="bars">
+            <li style="--v:62%"><span><span class="zh">ticket session</span><span class="en">ticket sessions</span></span><b>62%</b></li>
+            <li style="--v:17%"><span><span class="zh">总控</span><span class="en">coordinators</span></span><b>17%</b></li>
+            <li style="--v:15%"><span><span class="zh">子 agent</span><span class="en">subagents</span></span><b>15%</b></li>
+            <li style="--v:6%"><span><span class="zh">后台任务</span><span class="en">background jobs</span></span><b>6%</b></li>
+          </ul>
+        </div>
+        <div>
+          <h3><span class="zh">按模型（按价格折算）</span><span class="en">By model (price-weighted)</span></h3>
+          <ul class="bars">
+            <li style="--v:81%"><span class="mono">claude-opus-5-5</span><b>81%</b></li>
+            <li style="--v:16%"><span class="mono">claude-sonnet-5-5</span><b>16%</b></li>
+            <li style="--v:3%"><span class="mono">claude-haiku-5-5</span><b>3%</b></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="usage-copy">
+      <div class="fact">
+        <h3><span class="zh">算进去的是什么</span><span class="en">What it counts</span></h3>
+        <p><span class="zh">Butler 打开的 session（在跑的和刚退出的）、它们的子 agent，以及 Butler 在后台跑的 claude：写交接、写 feature 总结、检查 session 是不是卡住了。</span><span class="en">The sessions Butler opened (running and just exited), their subagents, and the <code>claude</code> runs Butler starts in the background: handoffs, feature summaries and stuck checks.</span></p>
+      </div>
+      <div class="fact">
+        <h3><span class="zh">从哪里读</span><span class="en">Where it comes from</span></h3>
+        <p><span class="zh">直接读你本机上 Claude Code 的 transcript，不需要另外接什么。</span><span class="en">Claude Code's transcripts on your machine. There is nothing else to connect.</span></p>
+      </div>
+      <div class="fact">
+        <h3><span class="zh">占比只用来比较</span><span class="en">Shares are for comparing</span></h3>
+        <p><span class="zh">各项占比按相对价格加权，所以同样多的 token，用在 Opus 上比用在 Haiku 上占得多。Butler 不把它换算成钱。</span><span class="en">The shares are weighted by relative price, so the same tokens count for more on Opus than on Haiku. Butler doesn't convert them to money.</span></p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="sec" id="local">
   <p class="kicker"><span class="zh">本地优先</span><span class="en">Local-first</span></p>
+  <h2><span class="zh">它是你电脑上的一个应用，不是一项服务</span><span class="en">An app on your computer, not a service</span></h2>
+  <p class="intro">
+    <span class="zh">Butler 不在你和 Claude Code 之间加一层服务器。它管的是你自己的 claude，用的是你自己的登录。</span>
+    <span class="en">Butler puts no server between you and Claude Code. It manages your own <code>claude</code>, signed in as you.</span>
+  </p>
+  <div class="facts six">
+    <div class="fact">
+      <h3><span class="zh">数据在本机的 SQLite 里</span><span class="en">Data in local SQLite</span></h3>
+      <p><span class="zh">ticket、session、交接、设置在 <code class="path">~/.butler/app.db</code>，记忆在 <code class="path">~/.butler/statecore/statecore.db</code>。升级重装时这些都保留。</span><span class="en">Tickets, sessions, handoffs and settings are in <code class="path">~/.butler/app.db</code>; memory is in <code class="path">~/.butler/statecore/statecore.db</code>. Both are kept when you install a new version.</span></p>
+    </div>
+    <div class="fact">
+      <h3><span class="zh">没有账号，没有遥测</span><span class="en">No accounts, no telemetry</span></h3>
+      <p><span class="zh">Butler 没有账号，不做授权校验，不发遥测，也不检查更新。它没有自己的 Jira、GitHub 或 Claude 登录。</span><span class="en">Butler has no accounts or license checks, sends no telemetry and doesn't check for updates. It has no Jira, GitHub or Claude login of its own.</span></p>
+    </div>
+    <div class="fact">
+      <h3><span class="zh">数据怎么离开你的电脑</span><span class="en">How data leaves your machine</span></h3>
+      <p><span class="zh">只有两条路：你自己的 claude，以及你配置了才有的个人 LLM API。这个 API 只在隐私档位为「完整」时用来做记忆提炼，每一次调用都记在「审计」页上。默认档位是「仅元数据」，不会调用它。</span><span class="en">Only through your own <code>claude</code> and, if you configure one, a personal LLM API. That API is called only at the full privacy level, for memory distillation, and every call is logged on the Audit page. The default level, metadata, never calls it.</span></p>
+    </div>
+    <div class="fact">
+      <h3><span class="zh">只有一处联网代码</span><span class="en">One piece of network code</span></h3>
+      <p><span class="zh">Butler 里唯一的联网代码，是给可选的个人 API 用的隐私网关。这一点由一条 lint 规则保证。</span><span class="en">The only network code in Butler is the privacy gateway for the optional personal API. A lint rule enforces this.</span></p>
+    </div>
+    <div class="fact">
+      <h3><span class="zh">只在你点了之后改 Claude Code 配置</span><span class="en">Claude Code config changes only when you click</span></h3>
+      <p><span class="zh">点「安装 hook」时，Butler 往用户级 <code>settings.json</code> 加四个 hook 和一个 <code>/handoff</code> 命令，第一次会先备份，你原有的 hook 和命令都保留，在设置里随时能卸载。记忆不用 <code>claude mcp add</code> 注册，而是在它启动的每个 session 上传 <code>--mcp-config</code>。</span><span class="en">When you click the hook install, Butler adds four hooks and a <code>/handoff</code> command to your user-level <code>settings.json</code>, backing it up the first time and keeping your other hooks and commands. You can uninstall from Settings. Memory is never registered with <code>claude mcp add</code>; Butler passes <code>--mcp-config</code> to each session it starts.</span></p>
+    </div>
+    <div class="fact">
+      <h3><span class="zh">MIT 开源</span><span class="en">MIT licensed</span></h3>
+      <p><span class="zh">源码在 GitHub 上，可以自己读、自己构建。Intel Mac 目前只能从源码构建。</span><span class="en">The source is on GitHub to read and build yourself. Intel Macs can build from source.</span></p>
+    </div>
+  </div>
 </section>
 
 <section class="sec" id="install">
   <p class="kicker"><span class="zh">安装</span><span class="en">Install</span></p>
+  <h2><span class="zh">下载、放行、跑一遍向导</span><span class="en">Download, allow it, run the wizard</span></h2>
+  <p class="intro">
+    <span class="zh">安装包在 GitHub 的 Releases 页上。目前的构建没有代码签名，所以浏览器和系统都会提醒你，下面写了怎么放行。</span>
+    <span class="en">The installers are on the GitHub Releases page. The builds are not code-signed yet, so your browser and OS will warn you; here is how to allow them.</span>
+  </p>
+  <div class="install-top">
+    <a class="cta primary" href="https://github.com/yul761/butler/releases/latest">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
+      <span class="zh">去 Releases 下载最新版</span><span class="en">Get the latest release</span>
+    </a>
+    <div class="req">
+      <h3><span class="zh">需要</span><span class="en">You need</span></h3>
+      <ul>
+        <li><span class="zh">Apple 芯片的 macOS，或 Windows 10/11 x64</span><span class="en">macOS on Apple silicon, or Windows 10/11 x64</span></li>
+        <li><span class="zh">装好并登录的 Claude Code，终端里 <code>claude --version</code> 能跑</span><span class="en">Claude Code installed and logged in: <code>claude --version</code> works in a terminal</span></li>
+        <li><span class="zh"><code>PATH</code> 上有 Git；Windows 上装 Git for Windows</span><span class="en">Git on <code>PATH</code>; on Windows, Git for Windows</span></li>
+        <li><span class="zh">可选：在 Claude Code 里配好 tracker 的 MCP（Jira、Linear、GitLab…），交接才能读 ticket 状态</span><span class="en">Optional: a tracker MCP server (Jira, Linear, GitLab, …) in Claude Code, so handoffs can read ticket status</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="os-grid">
+    <div class="os">
+      <h3>macOS <span class="file">Butler-x.y.z-arm64.dmg</span></h3>
+      <ol>
+        <li><span class="zh">打开 <code>.dmg</code>，把 Butler 拖进「应用程序」。</span><span class="en">Open the <code>.dmg</code> and drag Butler into Applications.</span></li>
+        <li><span class="zh">打开 Butler，macOS 会拒绝，说无法验证这个 App。</span><span class="en">Open Butler. macOS refuses and says it cannot verify the app.</span></li>
+        <li><span class="zh">打开「系统设置 → 隐私与安全性」，往下找到关于 Butler 的提示，点「仍要打开」并确认。或者在终端里去掉隔离标记：</span><span class="en">Open <b>System Settings → Privacy &amp; Security</b>, find the message about Butler, click <b>Open Anyway</b> and confirm. Or remove the quarantine flag in Terminal:</span></li>
+      </ol>
+      <div class="cmd"><pre><code id="xattr-cmd">xattr -dr com.apple.quarantine /Applications/Butler.app</code></pre><button type="button" class="copy" data-copy="xattr-cmd"><span class="zh">复制</span><span class="en">Copy</span></button></div>
+      <p class="os-note"><span class="zh">如果 macOS 说 Butler「已损坏，无法打开」，就没有「仍要打开」按钮，用上面的终端命令。每次下载新版本都要再做一次。</span><span class="en">If macOS says Butler "is damaged and can't be opened", there is no Open Anyway button; use the Terminal command. Repeat this after every new download.</span></p>
+    </div>
+    <div class="os">
+      <h3>Windows <span class="file">Butler-Setup-x.y.z.exe</span></h3>
+      <ol>
+        <li><span class="zh">浏览器可能提醒这个下载。在 Edge 里打开下载项的「…」菜单，选「保留」。</span><span class="en">Your browser may warn about the download. In Edge, open the download's <b>…</b> menu and choose <b>Keep</b>.</span></li>
+        <li><span class="zh">运行安装程序。SmartScreen 提示「Windows 已保护你的电脑」时，点「更多信息 → 仍要运行」。</span><span class="en">Run the installer. When SmartScreen says "Windows protected your PC", click <b>More info → Run anyway</b>.</span></li>
+        <li><span class="zh">选「仅为我安装」（不需要管理员权限），再选安装目录。</span><span class="en">Pick "only for me" (no admin rights needed) and an install folder.</span></li>
+      </ol>
+      <p class="os-note"><span class="zh">如果 Windows 11 开着「智能应用控制」，它会直接拦下未签名的应用，没有「仍要运行」，这时装不了 Butler。</span><span class="en">If Windows 11 Smart App Control is on, it blocks unsigned apps with no Run anyway option, and Butler can't be installed.</span></p>
+    </div>
+  </div>
+  <div class="aside">
+    <strong><span class="zh">第一次打开会有一个向导。</span><span class="en">The first launch opens a short wizard.</span></strong>
+    <span class="zh">它会找到你的 claude，问你要不要装 hook 和 <code>/handoff</code> 命令，让你挑交接可以调用的只读 tracker 工具，最后是可选的隐私档位和个人 API。没有自动更新：升级就是下载新版本装在旧版上，<code>~/.butler</code> 里的数据保留。细节见 README 的 <a href="https://github.com/yul761/butler#install">Install</a> 和 <a href="https://github.com/yul761/butler#first-run">First run</a>。</span>
+    <span class="en">It finds your <code>claude</code>, offers to install the hooks and the <code>/handoff</code> command, lets you pick the read-only tracker tools handoffs may call, and ends with the optional privacy level and personal API. There is no auto-update: to upgrade, install the new version over the old one, and your data in <code>~/.butler</code> is kept. Details are in the README's <a href="https://github.com/yul761/butler#install">Install</a> and <a href="https://github.com/yul761/butler#first-run">First run</a> sections.</span>
+  </div>
 </section>
 
-<section class="sec" id="end"></section>
+<section class="sec" id="end">
+  <p class="end-line"><span class="zh">如果你也是一个人开着一堆 Claude Code，可以试试看。</span><span class="en">If you also keep a pile of Claude Code sessions open, give it a try.</span></p>
+  <div class="ctas">
+    <a class="cta primary" href="https://github.com/yul761/butler/releases/latest">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
+      <span class="zh">下载</span><span class="en">Download</span>
+    </a>
+    <a class="cta ghost" href="https://github.com/yul761/butler">GitHub</a>
+  </div>
+</section>
 </main>
 
 <footer class="site-foot">
@@ -489,6 +696,22 @@
       b.addEventListener("click", function () { window.setLang(b.getAttribute("data-lang"), true); });
     });
   })();
+</script>
+<script>
+  // Copy buttons: copy the text of the element named by data-copy, then say so on the button for a moment.
+  document.querySelectorAll(".copy[data-copy]").forEach(function (b) {
+    var labels = { zh: "已复制", en: "Copied" };
+    b.addEventListener("click", function () {
+      var el = document.getElementById(b.getAttribute("data-copy"));
+      if (!el || !navigator.clipboard) return;
+      navigator.clipboard.writeText(el.textContent).then(function () {
+        var spans = b.querySelectorAll("span");
+        var old = [spans[0].textContent, spans[1].textContent];
+        spans[0].textContent = labels.zh; spans[1].textContent = labels.en;
+        setTimeout(function () { spans[0].textContent = old[0]; spans[1].textContent = old[1]; }, 1500);
+      }, function () {});
+    });
+  });
 </script>
 <script>
 (function () {

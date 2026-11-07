@@ -1,12 +1,159 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="is-en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Butler</title>
+<title>Butler — many Claude Code sessions, one shared memory</title>
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#07090e">
+<script>
+  // Pick the language before first paint: ?lang= wins, then a remembered choice, then the browser.
+  (function () {
+    var lang = null;
+    try { lang = new URLSearchParams(location.search).get("lang"); } catch (e) {}
+    if (lang !== "zh" && lang !== "en") { try { lang = localStorage.getItem("butler-lang"); } catch (e) {} }
+    if (lang !== "zh" && lang !== "en") { lang = /^zh/i.test(navigator.language || "") ? "zh" : "en"; }
+    var r = document.documentElement;
+    r.className = "is-" + lang;
+    r.lang = lang === "zh" ? "zh-CN" : "en";
+    if (lang === "zh") document.title = "Butler — 一群 Claude Code，一份共享记忆";
+  })();
+</script>
+<style>
+  :root {
+    --bg: #07090e;
+    --bg-2: #0c1018;
+    --ink: #eef1f7;
+    --ink-2: #c3cad8;
+    --muted: #8a93a6;
+    --line: rgba(255, 255, 255, 0.08);
+    --line-2: rgba(255, 255, 255, 0.14);
+    --blue: #2f6fdf;
+    --blue-2: #6b9cf0;
+    --green: #4ade80;
+    --green-2: #7ee0a8;
+    --amber: #f0cf6e;
+    --term: rgba(16, 19, 27, 0.82);
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: dark; scroll-behavior: smooth; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden; line-height: 1.6;
+  }
+  html.is-en .zh, html.is-zh .en { display: none !important; }
+  a { color: var(--blue-2); }
+  code { font-family: var(--mono); font-size: .9em; background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
+
+  /* ---------- top bar ---------- */
+  .topbar { position: relative; z-index: 2; max-width: 1240px; margin: 0 auto; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: var(--ink); text-decoration: none; }
+  .brand img { width: 28px; height: 28px; border-radius: 7px; }
+  .right { display: flex; gap: 14px; align-items: center; }
+  .gh { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600; display: flex; gap: 6px; align-items: center; }
+  .gh:hover { color: var(--ink); }
+  .gh svg { width: 17px; height: 17px; }
+  .lang { display: flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: rgba(255,255,255,.03); }
+  .lang button { border: 0; background: transparent; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--muted); padding: 4px 11px; border-radius: 999px; cursor: pointer; }
+  html.is-en .lang [data-lang="en"], html.is-zh .lang [data-lang="zh"] { background: var(--ink); color: var(--bg); }
+
+  /* ---------- content sections ---------- */
+  .sec { position: relative; z-index: 1; max-width: 1120px; margin: 0 auto; padding: 96px 24px 0; }
+  .kicker { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--blue-2); margin: 0 0 10px; }
+  html.is-zh .kicker { letter-spacing: .04em; }
+  .sec h2 { font-size: clamp(26px, 3.2vw, 38px); line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 14px; font-weight: 800; }
+  html.is-zh .sec h2 { letter-spacing: 0; }
+  .sec .intro { font-size: 17px; color: var(--ink-2); max-width: 46em; margin: 0 0 32px; }
+  .sec p { color: var(--ink-2); }
+
+  /* ---------- footer ---------- */
+  .foot { position: relative; z-index: 1; max-width: 1120px; margin: 96px auto 0; padding: 28px 24px 40px; border-top: 1px solid var(--line);
+    display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; font-size: 13.5px; color: var(--muted); }
+  .foot a { color: var(--muted); }
+  .foot a:hover { color: var(--ink); }
+
+  @media (max-width: 560px) {
+    .topbar, .sec, .foot { padding-left: 16px; padding-right: 16px; }
+    .sec { padding-top: 72px; }
+    .gh span { display: none; }
+  }
+</style>
 </head>
 <body>
+
+<header class="topbar" id="top">
+  <a class="brand" href="#top"><img src="assets/apple-touch-icon.png" alt="" width="28" height="28">Butler</a>
+  <div class="right">
+    <a class="gh" href="https://github.com/yul761/butler">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span>GitHub</span>
+    </a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="zh">中文</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section id="hero"></section>
+
+<section class="sec" id="flow">
+  <p class="kicker"><span class="zh">实际用法</span><span class="en">How it's used</span></p>
+</section>
+
+<section class="sec" id="memory">
+  <p class="kicker"><span class="zh">三层记忆</span><span class="en">Layered memory</span></p>
+</section>
+
+<section class="sec" id="now">
+  <p class="kicker"><span class="zh">「现在」页</span><span class="en">The Now page</span></p>
+</section>
+
+<section class="sec" id="usage">
+  <p class="kicker"><span class="zh">Token 用量</span><span class="en">Token usage</span></p>
+</section>
+
+<section class="sec" id="local">
+  <p class="kicker"><span class="zh">本地优先</span><span class="en">Local-first</span></p>
+</section>
+
+<section class="sec" id="install">
+  <p class="kicker"><span class="zh">安装</span><span class="en">Install</span></p>
+</section>
+
+<section class="sec" id="end"></section>
+</main>
+
+<footer class="foot">
+  <span><span class="zh">Butler · MIT 开源 · 作者 Yuchen Lin</span><span class="en">Butler · MIT licensed · made by Yuchen Lin</span></span>
+  <span><a href="https://github.com/yul761/butler">GitHub</a> · <a href="https://github.com/yul761/butler#readme">README</a> · <a href="https://github.com/yul761/butler/releases/latest"><span class="zh">下载</span><span class="en">Download</span></a></span>
+</footer>
+
+<script>
+  (function () {
+    var meta = {
+      en: { title: "Butler — many Claude Code sessions, one shared memory", lang: "en" },
+      zh: { title: "Butler — 一群 Claude Code，一份共享记忆", lang: "zh-CN" }
+    };
+    var root = document.documentElement;
+    window.butlerLang = function () { return root.classList.contains("is-zh") ? "zh" : "en"; };
+    window.setLang = function (lang, remember) {
+      if (lang !== "zh" && lang !== "en") return;
+      root.classList.remove("is-en", "is-zh");
+      root.classList.add("is-" + lang);
+      root.lang = meta[lang].lang;
+      document.title = meta[lang].title;
+      if (remember) { try { localStorage.setItem("butler-lang", lang); } catch (e) {} }
+      document.dispatchEvent(new CustomEvent("butler:lang", { detail: lang }));
+    };
+    document.querySelectorAll(".lang button").forEach(function (b) {
+      b.addEventListener("click", function () { window.setLang(b.getAttribute("data-lang"), true); });
+    });
+  })();
+</script>
 </body>
 </html>

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { findExternalLoads, findBannedPhrases, findMissingAssets, findUnpairedLang } from "./check.mjs";
+import { findExternalLoads, findBannedPhrases, findMissingAssets, findUnpairedLang, findUndefinedCssVars } from "./check.mjs";
 
 test("external script is reported", () => assert.equal(findExternalLoads('<script src="https://cdn.x/a.js"></script>').length, 1));
 test("external stylesheet is reported", () => assert.equal(findExternalLoads('<link rel="stylesheet" href="https://fonts.x/css">').length, 1));
@@ -34,3 +34,8 @@ test("unpaired zh in a section reported", () => assert.deepEqual(findUnpairedLan
 test("paired section passes", () => assert.deepEqual(findUnpairedLang('<section id="a"><span class="zh">中</span><span class="en">E</span></section>'), []));
 test("unpaired in header reported", () => assert.deepEqual(findUnpairedLang('<header><span class="en">E</span></header>'), ["header"]));
 test("class tokens like 'zhx' do not count", () => assert.deepEqual(findUnpairedLang('<section id="a"><span class="zhx">x</span></section>'), []));
+
+test("css var used but never defined is reported", () =>
+  assert.deepEqual(findUndefinedCssVars("<style>:root{--a:1px}.x{color:var(--b);margin:var(--a)}</style>"), ["--b"]));
+test("css var defined anywhere passes, fallback form too", () =>
+  assert.deepEqual(findUndefinedCssVars('<style>:root{--a:1px}.x{width:var(--a, 2px)}</style><li style="--v:62%"></li><style>.y{width:var(--v)}</style>'), []));

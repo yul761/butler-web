@@ -75,6 +75,13 @@ export function findUnpairedLang(html) {
   return out;
 }
 
+/** CSS custom properties read with var(--x) that no declaration (in <style> or a style="" attribute) ever sets. */
+export function findUndefinedCssVars(html) {
+  const defined = new Set([...html.matchAll(/(--[\w-]+)\s*:/g)].map((m) => m[1]));
+  const used = new Set([...html.matchAll(/var\(\s*(--[\w-]+)/g)].map((m) => m[1]));
+  return [...used].filter((v) => !defined.has(v));
+}
+
 function main() {
   const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
   const html = readFileSync(join(root, "index.html"), "utf8");
@@ -89,6 +96,7 @@ function main() {
     ...findBannedPhrases(html, privateTerms).map(() => "private term found (see tools/private-terms.txt)"),
     ...findMissingAssets(html, root).map((p) => `missing asset: ${p}`),
     ...findUnpairedLang(html).map((p) => `unpaired zh/en in: ${p}`),
+    ...findUndefinedCssVars(html).map((v) => `undefined css var: ${v}`),
   ];
   for (const p of problems) console.log(p);
   console.log(problems.length ? `${problems.length} problem(s)` : "ok");

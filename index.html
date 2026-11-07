@@ -83,7 +83,7 @@
   }
 
   .hero { position: relative; z-index: 1; text-align: center; padding: 14px 24px 0; max-width: 980px; margin: 0 auto; }
-  .eyebrow { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 600; color: var(--blue-hi);
+  .eyebrow { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 600; color: var(--blue-2);
     border: 1px solid rgba(107,156,240,.3); background: rgba(47,111,223,.08); padding: 5px 12px; border-radius: 999px; margin-bottom: 16px; }
   .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
   body { position: relative; }
@@ -123,12 +123,12 @@
   .pill { margin-left: auto; font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: rgba(74,222,128,.12); color: #7ee0a8; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
   .pill::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: blink 1.4s infinite; }
   .pill.ci { background: rgba(201,179,245,.12); color: #c9b3f5; }
-  .pill.think { background: rgba(107,156,240,.12); color: var(--blue-hi); }
+  .pill.think { background: rgba(107,156,240,.12); color: var(--blue-2); }
   .pill.ask { background: rgba(240,207,110,.16); color: var(--amber); }
   @keyframes blink { 50% { opacity: .3; } }
   .tb { height: 74px; padding: 6px 11px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11.5px; line-height: 16px; color: #b9c0cf; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; }
   .tb div { flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .tb .tool { color: #e6e9f0; } .tb .tool b { color: var(--blue-hi); font-weight: 600; }
+  .tb .tool { color: #e6e9f0; } .tb .tool b { color: var(--blue-2); font-weight: 600; }
   .tb .ok { color: #7ee0a8; } .tb .dim { color: #6b7385; }
   .tb .mem-w { color: #9cc0ff; } .tb .mem-r { color: #8ef0b8; } .tb .q { color: var(--amber); }
   .caret { display: inline-block; width: 6px; height: 12px; background: #b9c0cf; vertical-align: -2px; margin-left: 1px; animation: blink 1s steps(1) infinite; }
@@ -145,7 +145,7 @@
   .notes { display: flex; flex-direction: column; gap: 7px; min-height: 236px; }
   .note { background: rgba(7,9,14,.55); border: 1px solid rgba(255,255,255,.07); border-radius: 9px; padding: 7px 9px; font-size: 12px; line-height: 1.45; color: #dfe5f1;
     animation: drop .55s cubic-bezier(.2,.9,.3,1.2); }
-  .note .src { display: block; font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: var(--blue-hi); margin-bottom: 2px; }
+  .note .src { display: block; font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: var(--blue-2); margin-bottom: 2px; }
   .note.fresh { border-color: rgba(107,156,240,.6); background: rgba(47,111,223,.18); }
   @keyframes drop { from { opacity: 0; transform: translateY(-10px) scale(.96); } }
   .core .foot { display: flex; justify-content: space-between; font-size: 10.5px; color: #7d89a1; margin-top: 10px; }
@@ -382,7 +382,7 @@
   <div class="col" id="left"></div>
   <div class="core" id="core">
     <div class="needs" id="needs"><span class="zh">⚑ 需要你 · 1</span><span class="en">⚑ Needs you · 1</span></div>
-    <h3><span class="orb"></span><span class="zh">共享记忆 · 结账改版</span><span class="en">Shared memory · Checkout revamp</span></h3>
+    <h3><span class="orb"></span><span class="zh">共享记忆 · 结账金额</span><span class="en">Shared memory · Checkout totals</span></h3>
     <div class="sub"><span class="zh">feature 级 · 存在本地 StateCore</span><span class="en">feature scope · local StateCore</span></div>
     <div class="notes" id="notes"></div>
     <div class="foot"><span id="count"></span><span class="zh">8 个 session 在跑</span><span class="en">8 sessions running</span></div>
@@ -433,14 +433,14 @@
   <p class="kicker"><span class="zh">三层记忆</span><span class="en">Layered memory</span></p>
   <h2><span class="zh">「大家都知道」是怎么做到的</span><span class="en">How "everyone knows" actually works</span></h2>
   <p class="intro">
-    <span class="zh">Butler 内置了本地的 StateCore 记忆，给它打开的每个 session 都接上几份记忆。session 用 <code>remember</code> 记下，用 <code>recall</code> 读到。session 之间不直接对话，总控也不会往别的 session 的终端里打字；互通靠的就是这几份共用的记忆，一层套一层。</span>
-    <span class="en">Butler embeds a local StateCore memory and connects every session it opens to a few memories. A session writes with <code>remember</code> and reads with <code>recall</code>. Sessions never message one another, and a coordinator never types into another session's terminal: they stay in sync through these shared memories, nested one inside the next.</span>
+    <span class="zh">Butler 内置了本地的 StateCore 记忆，给它打开的每个 session 都接上几份记忆。session 用 <code>remember</code> 记下，用 <code>recall</code> 读到。总控不会往别的 session 的终端里打字，大家知道彼此做了什么，靠的就是这几份共用的记忆，一层套一层。</span>
+    <span class="en">Butler embeds a local StateCore memory and connects every session it opens to a few memories. A session writes with <code>remember</code> and reads with <code>recall</code>. A coordinator never types into another session's terminal. What keeps everyone in sync is these shared memories, nested one inside the next.</span>
   </p>
 
   <div class="layers">
     <div class="layer l-epic">
       <div class="lh"><span class="lname"><span class="zh">epic 记忆</span><span class="en">Epic memory</span></span><code>butler-epic</code></div>
-      <p><span class="zh">epic session 记下的规划和决定，加上每个 feature 的最新进展：feature 一有新总结，Butler 就自动改写这一份。epic 下面所有 session 都读得到。</span><span class="en">Planning notes and decisions from the epic session, plus the latest state of every feature, which Butler rewrites whenever a feature gets a new summary. Every session under the epic can read it.</span></p>
+      <p><span class="zh">epic session 记下的规划和决定，加上各个 feature 的最新进展（最近的 10 个）：feature 一有新总结，Butler 就自动改写这一份。epic 下面所有 session 都读得到。</span><span class="en">Planning notes and decisions from the epic session, plus the latest state of its features (the 10 most recent), which Butler rewrites whenever a feature gets a new summary. Every session under the epic can read it.</span></p>
       <div class="layer l-feature">
         <div class="lh"><span class="lname"><span class="zh">feature 记忆</span><span class="en">Feature memory</span></span><code>butler-feature</code></div>
         <p><span class="zh">前后端之间的约定，比如接口长什么样、谁负责哪一块。feature 的总控和它所有 ticket 的 session 共用。</span><span class="en">What frontend and backend agree on, such as the shape of an API and who owns which part. Shared by the feature's coordinator and every session of its tickets.</span></p>
@@ -482,7 +482,7 @@
       </div>
     </div>
   </div>
-  <p class="caption"><span class="zh">后端 session 改完接口就记下一句，同一个 feature 里的前端 session 下次 recall 时读到，照着改。中间没有人转述，也没有谁去敲谁的终端。</span><span class="en">The backend session notes the API change once it lands; the frontend session in the same feature reads it on its next recall and follows it. Nobody relays it, and nobody types into anybody's terminal.</span></p>
+  <p class="caption"><span class="zh">后端 session 改完接口就记下一句，同一个 feature 里的前端 session 下次 recall 时读到，照着改。中间没有人转述，总控也不用去敲前端的终端。</span><span class="en">The backend session notes the API change once it lands; the frontend session in the same feature reads it on its next recall and follows it. Nobody relays it, and no coordinator has to type it into the frontend's terminal.</span></p>
 
   <div class="facts">
     <div class="fact">
@@ -599,11 +599,11 @@
     </div>
     <div class="fact">
       <h3><span class="zh">只在你点了之后改 Claude Code 配置</span><span class="en">Claude Code config changes only when you click</span></h3>
-      <p><span class="zh">点「安装 hook」时，Butler 往用户级 <code>settings.json</code> 加四个 hook 和一个 <code>/handoff</code> 命令，第一次会先备份，你原有的 hook 和命令都保留，在设置里随时能卸载。记忆不用 <code>claude mcp add</code> 注册，而是在它启动的每个 session 上传 <code>--mcp-config</code>。</span><span class="en">When you click the hook install, Butler adds four hooks and a <code>/handoff</code> command to your user-level <code>settings.json</code>, backing it up the first time and keeping your other hooks and commands. You can uninstall from Settings. Memory is never registered with <code>claude mcp add</code>; Butler passes <code>--mcp-config</code> to each session it starts.</span></p>
+      <p><span class="zh">点「安装 hook」时，Butler 往用户级 <code>settings.json</code> 加四个 hook（第一次会先备份这个文件），再写一个 <code>/handoff</code> 命令，你原有的 hook 和命令都保留，在设置里随时能卸载。记忆不用 <code>claude mcp add</code> 注册，而是在它启动的每个 session 上传 <code>--mcp-config</code>。</span><span class="en">When you click the hook install, Butler adds four hooks to your user-level <code>settings.json</code> (backing the file up the first time) and writes a <code>/handoff</code> command, keeping your other hooks and commands. You can uninstall from Settings. Memory is never registered with <code>claude mcp add</code>; Butler passes <code>--mcp-config</code> to each session it starts.</span></p>
     </div>
     <div class="fact">
       <h3><span class="zh">MIT 开源</span><span class="en">MIT licensed</span></h3>
-      <p><span class="zh">源码在 GitHub 上，可以自己读、自己构建。Intel Mac 目前只能从源码构建。</span><span class="en">The source is on GitHub to read and build yourself. Intel Macs can build from source.</span></p>
+      <p><span class="zh">源码在 GitHub 上，可以自己读、自己构建。Intel Mac 需要从源码构建。</span><span class="en">The source is on GitHub to read and build yourself. Intel Macs need to build from source.</span></p>
     </div>
   </div>
 </section>
@@ -700,15 +700,14 @@
 <script>
   // Copy buttons: copy the text of the element named by data-copy, then say so on the button for a moment.
   document.querySelectorAll(".copy[data-copy]").forEach(function (b) {
-    var labels = { zh: "已复制", en: "Copied" };
+    var spans = b.querySelectorAll("span"), idle = [spans[0].textContent, spans[1].textContent], timer = null;
     b.addEventListener("click", function () {
       var el = document.getElementById(b.getAttribute("data-copy"));
       if (!el || !navigator.clipboard) return;
       navigator.clipboard.writeText(el.textContent).then(function () {
-        var spans = b.querySelectorAll("span");
-        var old = [spans[0].textContent, spans[1].textContent];
-        spans[0].textContent = labels.zh; spans[1].textContent = labels.en;
-        setTimeout(function () { spans[0].textContent = old[0]; spans[1].textContent = old[1]; }, 1500);
+        spans[0].textContent = "已复制"; spans[1].textContent = "Copied";
+        clearTimeout(timer);
+        timer = setTimeout(function () { spans[0].textContent = idle[0]; spans[1].textContent = idle[1]; }, 1500);
       }, function () {});
     });
   });
@@ -744,10 +743,10 @@
       pool: [["tool","Read","src/pay/refund.ts","read"],["tool","Grep","\"onNotify\"","read"],["tool","Edit","src/pay/refund.ts (+8 −3)","code"],["ok","  ✓ 17 passed","","test"],["dim","✻ Thinking…","","think"]] },
     { id: "CART-13", repo: "web",  side: "right", pill: "code",
       pool: [["tool","Edit","CartSummary.tsx (+18 −6)","code"],["tool","Read","hooks/useCart.ts","read"],["tool","Bash","pnpm vitest cart","test"],["ok","  ✓ 24 passed","","test"],["dim","✻ Thinking…","","think"]] },
-    { id: "CART-14", repo: "web",  side: "right", pill: "test",
-      pool: [["tool","Bash","pnpm playwright test checkout","test"],["dim","  ◌ 11/14 specs","","test"],["ok","  ✓ 14 passed","","test"],["tool","Edit","CheckoutPage.tsx (+5 −2)","code"],["tool","Bash","git push","ci"]] },
     { id: "PAY-4",   repo: "web",  side: "right", pill: "code",
       pool: [["tool","Edit","usePriceBreakdown.ts (+14 −11)","code"],["tool","Read","components/Coupon.tsx","read"],["tool","Bash","pnpm vitest price","test"],["ok","  ✓ 9 passed","","test"],["dim","✻ Thinking…","","think"]] },
+    { id: "CART-14", repo: "web",  side: "right", pill: "test",
+      pool: [["tool","Bash","pnpm playwright test checkout","test"],["dim","  ◌ 11/14 specs","","test"],["ok","  ✓ 14 passed","","test"],["tool","Edit","CheckoutPage.tsx (+5 −2)","code"],["tool","Bash","git push","ci"]] },
     { id: "CART-16", repo: "api",  side: "right", pill: "code",
       pool: [["tool","Write","migrations/0042_order_totals.sql","code"],["tool","Read","db/schema.ts","read"],["tool","Bash","npm run db:check","test"],["ok","  ✓ schema ok","","test"],["dim","✻ Thinking…","","think"]] }
   ];
@@ -902,8 +901,16 @@
 
   // ---------- choreography ----------
   var ei = 0;
+  function shown(t) { return t.el.offsetParent !== null; }
   function memoryEvent() {
-    var e = EVENTS[ei++ % EVENTS.length], src = byId(e.from), dst = byId(e.to);
+    // On narrow screens only some terminals are shown: play the next event whose two ends are both visible.
+    var e, src, dst;
+    for (var i = 0; i < EVENTS.length; i++) {
+      e = EVENTS[ei++ % EVENTS.length]; src = byId(e.from); dst = byId(e.to);
+      if (shown(src) && shown(dst)) break;
+      e = null;
+    }
+    if (!e || src.busy || dst.busy) return;
     src.busy = true; dst.busy = true;
     src.queue.push({ html: '<span class="mem-w">⏺ remember("' + esc(T(e.note)) + '")</span>', pill: "code", done: function () {
       src.el.classList.add("write");
@@ -926,8 +933,8 @@
 
   var askOn = false;
   function askEvent() {
-    var cands = terms.filter(function (t) { return !t.busy; }); if (!cands.length) return;
-    var t = byId("CART-16"); if (t.busy) t = cands[Math.floor(Math.random() * cands.length)];
+    var cands = terms.filter(function (t) { return !t.busy && shown(t); }); if (!cands.length) return;
+    var t = byId("CART-16"); if (t.busy || !shown(t)) t = cands[Math.floor(Math.random() * cands.length)];
     t.busy = true; askOn = true;
     t.queue.push({ html: '<span class="q">? ' + (lang === "zh" ? "迁移会锁 orders 表约 2 秒，继续吗？(y/n)" : "Migration locks orders for ~2s. Continue? (y/n)") + '</span>', pill: "ask", done: function () {
       t.el.classList.add("ask"); document.getElementById("needs").classList.add("on");

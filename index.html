@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Butler — many Claude Code sessions, one shared memory</title>
+<title>Butler — one coordinator for your Claude Code sessions</title>
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#07090e">
-<meta name="description" content="Butler is an MIT-licensed desktop app for running many Claude Code sessions at once: one session per ticket, a shared layered memory, and a Now page that shows what needs you.">
+<meta name="description" content="Butler is an MIT-licensed desktop app for people who run several Claude Code sessions at once. Talk to one coordinator: it runs the sessions, one per ticket in its own worktree, and only pings you when it's your turn.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://butler.statecore.io/">
-<meta property="og:title" content="Butler — many Claude Code sessions, one shared memory">
-<meta property="og:description" content="A desktop app for running one Claude Code session per ticket, with a shared layered memory and a Now page that shows what needs you. macOS and Windows, MIT licensed.">
+<meta property="og:title" content="Butler — one coordinator for your Claude Code sessions">
+<meta property="og:description" content="Talk to one coordinator. It runs your Claude Code sessions and only pings you when it's your turn. macOS and Windows, MIT licensed, local-first.">
 <meta property="og:image" content="https://butler.statecore.io/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -26,7 +26,7 @@
     var r = document.documentElement;
     r.className = "is-" + lang;
     r.lang = lang === "zh" ? "zh-CN" : "en";
-    if (lang === "zh") document.title = "Butler — 一群 Claude Code，一份共享记忆";
+    if (lang === "zh") document.title = "Butler — 一个总控，管好你的 Claude Code session";
   })();
 </script>
 <style>
@@ -88,7 +88,7 @@
   .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
   body { position: relative; }
   #hero { position: relative; overflow: hidden; }
-  h1 { font-size: clamp(34px, 4.8vw, 60px); line-height: 1.06; letter-spacing: -0.035em; margin: 0 0 16px; font-weight: 800; }
+  h1 { font-size: clamp(32px, 4.4vw, 54px); line-height: 1.06; letter-spacing: -0.035em; margin: 0 0 16px; font-weight: 800; }
   html.is-zh h1 { letter-spacing: -0.01em; line-height: 1.16; }
   h1 .hl { background: linear-gradient(92deg, #9cc0ff 0%, #6b9cf0 40%, #8ef0b8 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .lede { font-size: clamp(16px, 1.7vw, 19px); color: #aab3c5; line-height: 1.6; margin: 0 auto 22px; max-width: 40em; }
@@ -209,8 +209,6 @@
   .lh code { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
   .l-epic { background: rgba(201,179,245,.05); border-color: rgba(201,179,245,.28); }
   .l-epic > .lh .lname { color: #d9c8fa; }
-  .l-feature { margin-top: 14px; background: rgba(107,156,240,.06); border-color: rgba(107,156,240,.32); }
-  .l-feature > .lh .lname { color: #a9c4f7; }
   .tickets { margin-top: 14px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
   .l-ticket { background: rgba(126,224,168,.05); border-color: rgba(126,224,168,.28); }
   .l-ticket .lname { color: #9be8bd; }
@@ -244,41 +242,33 @@
     .layer { padding: 14px; }
   }
 
-  /* ---------- now ---------- */
-  .now-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
-  .now-copy { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 28px; }
-  .now-copy p { margin: 0; font-size: 15px; line-height: 1.65; }
+  /* ---------- screenshots / your turn ---------- */
+  .turn-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .turn-copy { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 28px; }
+  .turn-copy p { margin: 0; font-size: 15px; line-height: 1.65; }
+  .sec .shot.demo { margin: 0 0 36px; }
+  .merge-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 20px 36px; align-items: start; }
+  .merge-grid h3.sub-h { margin-top: 0; }
+  .merge-grid p { margin: 0 0 12px; font-size: 15px; line-height: 1.65; }
+  .sec .merge-wrap { margin-top: 44px; }
   .shot { position: relative; margin: 0; }
   .shot img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line-2); box-shadow: 0 24px 60px rgba(0,0,0,.45); background: #f6f6f4; }
   .shot .badge { position: absolute; top: -13px; right: 18px; z-index: 1; }
   .sec .shot figcaption { margin-top: 10px; font-size: 13.5px; color: var(--muted); }
-  @media (max-width: 980px) { .now-copy { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 980px) { .turn-copy, .merge-grid { grid-template-columns: minmax(0, 1fr); } }
   @media (max-width: 560px) { .shot .badge { position: static; display: inline-block; margin-bottom: 10px; } }
 
-  /* ---------- usage ---------- */
+  /* ---------- compare ---------- */
   .badge { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: rgba(7,9,14,.82); color: var(--amber); border: 1px solid rgba(240,207,110,.45); }
-  .usage-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 36px; align-items: start; }
-  .usage-card { position: relative; background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 16px; padding: 24px 24px 22px; box-shadow: 0 24px 60px rgba(0,0,0,.35); }
-  .usage-card .badge { position: absolute; top: -13px; right: 18px; }
-  .u-head { display: flex; flex-direction: column; gap: 2px; }
-  .u-label { font-size: 13px; font-weight: 600; color: var(--muted); }
-  .u-big { font-size: clamp(40px, 5vw, 56px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; color: var(--ink); font-variant-numeric: tabular-nums; }
-  .u-big small { font-size: .4em; font-weight: 600; letter-spacing: 0; color: var(--muted); margin-left: 4px; }
-  .u-stats { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 22px; }
-  .u-stats > span { font-size: 13.5px; color: var(--ink-2); padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line-2); background: rgba(255,255,255,.03); }
-  .u-stats b { color: var(--ink); font-variant-numeric: tabular-nums; }
-  .u-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; border-top: 1px solid var(--line); padding-top: 18px; }
-  .u-cols h3 { font-size: 13px; font-weight: 700; color: var(--muted); margin: 0 0 10px; }
-  .bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-  .bars li { position: relative; display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; color: var(--ink-2); padding-bottom: 7px; }
-  .bars li::before, .bars li::after { content: ""; position: absolute; left: 0; bottom: 0; height: 4px; border-radius: 4px; }
-  .bars li::before { right: 0; background: rgba(255,255,255,.06); }
-  .bars li::after { width: var(--v); background: var(--blue-2); }
-  .bars li span { min-width: 0; overflow-wrap: anywhere; }
-  .bars b { color: var(--ink); font-variant-numeric: tabular-nums; }
-  .mono { font-family: var(--mono); font-size: .92em; }
-  .usage-copy { display: grid; gap: 22px; }
-  .usage-copy .fact { border-top: 0; padding-top: 0; }
+  .cmp { border: 1px solid var(--line-2); border-radius: 16px; overflow: hidden; background: var(--bg-2); }
+  .cmp-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1.4fr); border-top: 1px solid var(--line); }
+  .cmp-row:first-child { border-top: 0; }
+  .cmp-row > div { padding: 13px 18px; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); min-width: 0; }
+  .cmp-row > div:first-child { color: var(--ink); font-weight: 600; }
+  .cmp-row > div:last-child { color: var(--ink); background: rgba(47,111,223,.07); }
+  .cmp-head > div { font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--muted) !important; padding-top: 11px; padding-bottom: 11px; }
+  .cmp-head > div:last-child { color: var(--blue-2) !important; }
+  .cmp-k { display: none; }
 
   /* ---------- local ---------- */
   .facts.six { margin-top: 0; gap: 26px 28px; }
@@ -308,12 +298,15 @@
   .sec p.end-line { font-size: clamp(20px, 2.4vw, 26px); font-weight: 700; color: var(--ink); margin: 0 0 22px; }
 
   @media (max-width: 980px) {
-    .usage-grid, .os-grid, .install-top { grid-template-columns: minmax(0, 1fr); }
+    .os-grid, .install-top { grid-template-columns: minmax(0, 1fr); }
   }
   @media (max-width: 560px) {
-    .usage-card { padding: 20px 16px 18px; }
-    .usage-card .badge { position: static; display: inline-block; margin-bottom: 12px; }
-    .u-cols { grid-template-columns: minmax(0, 1fr); }
+    .cmp-head { display: none !important; }
+    .cmp-row { grid-template-columns: minmax(0, 1fr); padding: 6px 0; }
+    .cmp-row > div { padding: 5px 16px; }
+    .cmp-row > div:last-child { background: none; }
+    .cmp-k { display: block; font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+    .cmp-row > div:last-child .cmp-k { color: var(--blue-2); }
     .os { padding: 16px; }
   }
 
@@ -351,16 +344,16 @@
 <section id="hero">
 <div class="hero">
   <div class="eyebrow"><span class="dot"></span>
-    <span class="zh">开源 · 给同时开很多个 Claude Code 的人</span>
-    <span class="en">Open source · for people who run many Claude Code sessions</span>
+    <span class="zh">开源 · 给同时开好几个 Claude Code、已经顾不过来的人</span>
+    <span class="en">Open source · for people juggling several Claude Code sessions</span>
   </div>
   <h1>
-    <span class="zh">一群 Claude Code 同时开工，<br><span class="hl">谁做了什么，大家都知道。</span></span>
-    <span class="en">Many Claude Code sessions.<br><span class="hl">One shared memory.</span></span>
+    <span class="zh">和一个总控对话。<br><span class="hl">它替你管好各个 Claude Code session，只在轮到你的时候叫你。</span></span>
+    <span class="en">Talk to one coordinator.<br><span class="hl">It runs your Claude Code sessions and only pings you when it's your turn.</span></span>
   </h1>
   <p class="lede">
-    <span class="zh">Butler 让每个 ticket 有自己的 Claude Code session，并让这些 session 共用一份分层的本地记忆。后端 session 记下的接口改动，前端 session 读得到；哪个 session 需要你拍板，它会排在最前面等你。</span>
-    <span class="en">With Butler, every ticket gets its own Claude Code session, and those sessions share a layered local memory. What the backend session writes down, the frontend session reads. When one of them needs you, it waits at the top of the list.</span>
+    <span class="zh">你已经在好几个终端里开着 Claude Code，常常记不清哪个在等你。用 Butler，你把一块活讲给 epic 的总控听：它拆成几个 ticket，每个 ticket 有自己的 session 和 git worktree，要你处理的事都汇到一个页面上。</span>
+    <span class="en">You already run Claude Code in several terminals and lose track of which one is waiting on you. With Butler you describe a body of work to an epic coordinator. It splits the work into tickets, gives each ticket its own session and git worktree, and puts everything that needs you on one page.</span>
   </p>
   <div class="ctas">
     <a class="cta primary" href="https://github.com/yul761/butler/releases/latest">
@@ -372,8 +365,8 @@
     </a>
   </div>
   <p class="fine">
-    <span class="zh">MIT 开源 · 记忆和状态存在本机 · 用你自己登录的 claude</span>
-    <span class="en">MIT licensed · memory and state live on your machine · runs your own logged-in claude</span>
+    <span class="zh">MIT 开源 · 自己没有模型，也没有 API key · 用你自己登录的 claude</span>
+    <span class="en">MIT licensed · no model or API key of its own · runs your own logged-in claude</span>
   </p>
 </div>
 
@@ -381,9 +374,9 @@
   <svg class="wires" id="wires"></svg>
   <div class="col" id="left"></div>
   <div class="core" id="core">
-    <div class="needs" id="needs"><span class="zh">⚑ 需要你 · 1</span><span class="en">⚑ Needs you · 1</span></div>
-    <h3><span class="orb"></span><span class="zh">共享记忆 · 结账金额</span><span class="en">Shared memory · Checkout totals</span></h3>
-    <div class="sub"><span class="zh">feature 级 · 存在本地 StateCore</span><span class="en">feature scope · local StateCore</span></div>
+    <div class="needs" id="needs"><span class="zh">⚑ 轮到你 · 1</span><span class="en">⚑ Your turn · 1</span></div>
+    <h3><span class="orb"></span><span class="zh">epic 记忆 · 结账改版</span><span class="en">Epic memory · Checkout</span></h3>
+    <div class="sub"><span class="zh">新约定会送到其他在跑的 session · 本地 StateCore</span><span class="en">new conventions reach the other running sessions · local StateCore</span></div>
     <div class="notes" id="notes"></div>
     <div class="foot"><span id="count"></span><span class="zh">8 个 session 在跑</span><span class="en">8 sessions running</span></div>
   </div>
@@ -393,66 +386,89 @@
 
 <section class="sec" id="flow">
   <p class="kicker"><span class="zh">实际用法</span><span class="en">How it's used</span></p>
-  <h2><span class="zh">从 Jira 里现成的 ticket，到一组在干活的 session</span><span class="en">From tickets already in Jira to a set of working sessions</span></h2>
+  <h2><span class="zh">交出去的是一块活，不是一条提示词</span><span class="en">Hand over a body of work, not a prompt</span></h2>
   <p class="intro">
-    <span class="zh">Butler 不替你规划，也不替你拆需求。它做的是把「一个 ticket 一个 Claude Code session」这件事管起来：开 session、分组、看状态、记下和传递上下文。下面是一个 epic 从规划到开工的真实流程。</span>
-    <span class="en">Butler doesn't plan for you or split requirements for you. It runs the "one Claude Code session per ticket" way of working: opening sessions, grouping them, showing their state, and keeping and passing on context. This is how an epic actually goes from plan to work.</span>
+    <span class="zh">只是并排开几个 session 的话，总控就是你自己：你来拆活，给每个 session 写提示词，盯着每个终端，还要想清楚哪个 PR 先合。在 Butler 里，这些交给 epic 的总控。它也是一个 Claude Code session，看得到这个 epic 的每个 ticket，你和它把活商量清楚就行。</span>
+    <span class="en">With sessions side by side, you are the coordinator: you split the work, write a prompt for each session, watch every terminal and work out which PR merges first. In Butler, an epic coordinator takes that over. It is a Claude Code session that sees every ticket of the epic, and you talk the work through with it.</span>
   </p>
+  <figure class="shot demo">
+    <span class="badge"><span class="zh">演示数据</span><span class="en">Demo data</span></span>
+    <picture class="zh">
+      <source media="(prefers-reduced-motion: reduce)" srcset="assets/demo-still-zh.webp">
+      <img src="assets/demo-zh.webp" width="1280" height="768" loading="lazy" alt="把 epic 讲给总控听，它拆成 feature 和 ticket，每个 ticket 有自己的 session 和 worktree，「轮到你」页上出现卡片，你把 PR 合进去，接着做下一个">
+    </picture>
+    <picture class="en">
+      <source media="(prefers-reduced-motion: reduce)" srcset="assets/demo-still-en.webp">
+      <img src="assets/demo-en.webp" width="1280" height="768" loading="lazy" alt="Describe an epic to its coordinator; it splits the work into features and tickets, each ticket gets its own session and worktree, cards show up on Your turn, you merge the PR and the next ticket starts">
+    </picture>
+    <figcaption><span class="zh">真实的 Butler 界面，用的是演示数据：把 epic 讲给总控，它拆成 feature 和 ticket，每个 ticket 有自己的 session 和 worktree；卡片出现在「轮到你」页，你合并 PR，接着做下一个。</span><span class="en">The real Butler UI with demo data: describe the epic, the coordinator splits it into features and tickets, and each ticket gets its own session and worktree. Cards show up on Your turn, you merge the PR, and the next ticket starts.</span></figcaption>
+  </figure>
   <ol class="steps">
     <li class="step">
       <span class="num">1</span>
-      <h3><span class="zh">ticket 早就在 Jira 里</span><span class="en">The tickets are already in Jira</span></h3>
-      <p><span class="zh">产品已经把需求写成了 ticket。Butler 不拆 ticket，也不连 Jira：读 Jira 的是你自己的 Claude Code，通过它自己的 Jira MCP。</span><span class="en">Product has already written the tickets. Butler doesn't split them and doesn't connect to Jira: your own Claude Code reads Jira, through its own Jira MCP server.</span></p>
+      <h3><span class="zh">建一个 epic，选好仓库</span><span class="en">Create an epic and pick its repos</span></h3>
+      <p><span class="zh">在「全部工作」页点「+ 新建 epic」，起个名字，选好仓库；也可以直接选放着前后端仓库的那个文件夹。ticket 的 worktree 都放在 epic 自己的工作区里，同一个仓库里的几个 ticket 可以同时推进。</span><span class="en">On <b>All work</b>, click <b>+ New epic</b>, name it and pick its repos, or the folder that holds them, say a frontend and a backend. Every ticket's worktrees go into the epic's own workspace, so several tickets in one repo can move at once.</span></p>
     </li>
     <li class="step">
       <span class="num">2</span>
-      <h3><span class="zh">在 epic session 里理成几个 feature</span><span class="en">Sort them into features in an epic session</span></h3>
-      <p><span class="zh">在 epic 页打开一个 epic session，和 Claude 一起把这些 ticket 归成几个 feature，理清先后，以及前后端怎么配合。定下来的 feature 由 epic session 建出来，附上一份规划：做什么、为什么、已经定了什么。</span><span class="en">Open an epic session on the epic page and work out with Claude which tickets form which feature, in what order, and how frontend and backend fit together. When a feature is settled, the epic session creates it with a short plan: what to build, why, and what is already decided.</span></p>
-      <p class="chips"><code>create_feature</code></p>
+      <h3><span class="zh">把活讲给总控听</span><span class="en">Describe the work to the coordinator</span></h3>
+      <p><span class="zh">在 epic 的「总控」tab 里点「+ 总控 session」，把要做的活讲给它听。总控建好 ticket，再把它们分进 feature：feature 只是 epic 里轻量的分组，总控一次推一个，互不依赖的同时推。</span><span class="en">On the epic's <b>Control</b> tab, click <b>+ Coordinator session</b> and describe the work. The coordinator creates the tickets and sorts them into features: light groups inside the epic that it pushes forward one at a time, running independent ones side by side.</span></p>
+      <p class="chips"><code>create_ticket</code> <code>create_feature</code></p>
     </li>
     <li class="step">
       <span class="num">3</span>
-      <h3><span class="zh">打开 feature 的总控，开工</span><span class="en">Open the feature's coordinator and start</span></h3>
-      <p><span class="zh">点进 feature，打开它的总控。总控第一次打开时会收到这份规划，以及同一个 epic 里其他 feature 的进展。它建好 ticket，再给每个 ticket 开一个 session，把任务发过去。一个 feature 最多同时跑 8 个终端。</span><span class="en">Click into the feature and open its coordinator. The first time, it receives the plan plus the progress of the epic's other features. It creates the tickets, then opens a session in each one and hands it a task. A feature runs at most 8 terminals at once.</span></p>
-      <p class="chips"><code>create_ticket</code> <code>start_session</code></p>
+      <h3><span class="zh">它在每个 ticket 里开 session</span><span class="en">It starts a session in each ticket</span></h3>
+      <p><span class="zh">总控在每个 ticket 里开一个 session，各有各的 git worktree，再把任务派下去。它看得到每个 session 在做什么，通过信箱给它们发消息，做完的会关掉。每个 session 仍然是真正的 Claude Code 终端，你随时可以看、可以接手。</span><span class="en">The coordinator opens a session in each ticket, each in its own git worktree, and hands it its task. It sees what every session is doing, messages them through their mailboxes and closes the ones that are done. Every session is still a real Claude Code terminal you can watch and take over.</span></p>
+      <p class="chips"><code>start_session</code> <code>list_sessions</code> <code>send_message</code></p>
     </li>
     <li class="step">
       <span class="num">4</span>
-      <h3><span class="zh">你只处理「需要你」的</span><span class="en">You handle what needs you</span></h3>
-      <p><span class="zh">「现在」页把每个 session 按 epic / feature / ticket 排好，等你回答、等你确认、或者卡住了的，会置顶。每晚 Butler 用你自己登录的 claude 给有进展的 ticket 写一份交接（handoff），第二天的 session 一 recall 就接得上。</span><span class="en">The Now page lists every session by epic, feature and ticket, and pins the ones waiting for an answer, a confirmation, or stuck. Every night Butler asks your own logged-in claude to write a handoff for each ticket that moved, so the next day's session picks up from it with one recall.</span></p>
+      <h3><span class="zh">你回答问题，点合并</span><span class="en">You answer, and you click merge</span></h3>
+      <p><span class="zh">提问、权限确认、可以合并的 PR，都变成「轮到你」页上的卡片。合并仍然由你来点。每晚 Butler 用你自己登录的 claude 给有进展的 ticket 写一份交接（handoff），作为它的状态。</span><span class="en">Questions, permission prompts and PRs ready to merge become cards on <b>Your turn</b>. You still click merge. Each night Butler asks your own logged-in <code>claude</code> to write a handoff for every ticket that moved, which becomes its status.</span></p>
     </li>
   </ol>
+
+  <div class="merge-wrap merge-grid">
+    <div>
+      <h3 class="sub-h"><span class="zh">合并之前先检查，分支不撞车</span><span class="en">Merges are checked, so branches don't collide</span></h3>
+      <p><span class="zh">Butler 盯着它开的 session，每次往目标分支合并之前都先用 git 检查。两个分支冲突时，先合的放行，另一个 ticket 会被告知要 rebase；和一个正在进行的合并冲突时，要等那个合完。</span><span class="en">Butler watches the sessions it opens and checks every merge into a target branch with git before it happens. When two branches conflict, the first to merge goes ahead and the other ticket is told to rebase; a merge that conflicts with one already under way waits until that one lands.</span></p>
+      <p><span class="zh">epic 页按 feature 的顺序列出 ticket，每一行写着现在轮到谁：你、agent，还是 CI 或某位 reviewer。</span><span class="en">The epic page lists the tickets by feature, in order, and each row says whose turn it is: yours, an agent's, or CI's or a reviewer's.</span></p>
+    </div>
+    <figure class="shot">
+      <span class="badge"><span class="zh">演示数据</span><span class="en">Demo data</span></span>
+      <a class="zh" href="assets/epic-zh.webp" target="_blank" rel="noopener"><img src="assets/epic-zh.webp" width="1600" height="960" loading="lazy" alt="epic 页：轮到你的两张卡片，下面按 feature 分组列出 ticket，写着轮到谁和状态"></a>
+      <a class="en" href="assets/epic-en.webp" target="_blank" rel="noopener"><img src="assets/epic-en.webp" width="1600" height="960" loading="lazy" alt="An epic page: two cards waiting on you, then the tickets grouped by feature with whose turn it is and their status"></a>
+      <figcaption><span class="zh">一个 epic 的概况：ticket 按 feature 分组，按顺序推进。</span><span class="en">An epic's Overview: tickets grouped by feature, worked through in order.</span></figcaption>
+    </figure>
+  </div>
+
   <div class="aside">
-    <strong><span class="zh">Butler 本身不连任何 tracker。</span><span class="en">Butler itself connects to no tracker.</span></strong>
-    <span class="zh">Jira、Linear、GitLab 都由你自己的 Claude Code 通过它自己的 MCP 读取；PR 由 claude 用你的 <code>gh</code> 读取。Butler 也没有自己的 Jira、GitHub 或 Claude 登录。</span>
-    <span class="en">Jira, Linear or GitLab are read by your own Claude Code through its own MCP servers; PRs are read by claude with your <code>gh</code>. Butler has no Jira, GitHub or Claude login of its own.</span>
+    <strong><span class="zh">Butler 自己不登录任何 tracker。</span><span class="en">Butler has no tracker login of its own.</span></strong>
+    <span class="zh">Jira、Linear、GitLab 都由你自己的 Claude Code 通过它自己的 MCP 读取；PR 用你的 <code>gh</code> 读取。Butler 也没有自己的 Jira、GitHub 或 Claude 登录。</span>
+    <span class="en">Jira, Linear or GitLab are read by your own Claude Code through its own MCP servers; PRs are read with your <code>gh</code>. Butler has no Jira, GitHub or Claude login of its own.</span>
   </div>
 </section>
 
 <section class="sec" id="memory">
-  <p class="kicker"><span class="zh">三层记忆</span><span class="en">Layered memory</span></p>
-  <h2><span class="zh">「大家都知道」是怎么做到的</span><span class="en">How "everyone knows" actually works</span></h2>
+  <p class="kicker"><span class="zh">共享记忆</span><span class="en">Shared memory</span></p>
+  <h2><span class="zh">session 之间共享记忆</span><span class="en">Sessions share memory</span></h2>
   <p class="intro">
-    <span class="zh">Butler 内置了本地的 StateCore 记忆，给它打开的每个 session 都接上几份记忆。session 用 <code>remember</code> 记下，用 <code>recall</code> 读到。总控不会往别的 session 的终端里打字，大家知道彼此做了什么，靠的就是这几份共用的记忆，一层套一层。</span>
-    <span class="en">Butler embeds a local StateCore memory and connects every session it opens to a few memories. A session writes with <code>remember</code> and reads with <code>recall</code>. A coordinator never types into another session's terminal. What keeps everyone in sync is these shared memories, nested one inside the next.</span>
+    <span class="zh">Butler 内置本地的 StateCore 记忆，它开的每个 session 都接上。session 用 <code>remember</code> 存，用 <code>recall</code> 读。epic 里一个 session 把约定存进 epic 记忆，比如一份 API 约定，Butler 会把它送进这个 epic 里其他正在跑的 session 的信箱。</span>
+    <span class="en">Butler embeds a local StateCore memory and connects every session it opens. A session saves with <code>remember</code> and reads with <code>recall</code>. When a session in an epic saves a convention to the epic's memory, such as an API contract, Butler delivers it to the mailboxes of the epic's other running sessions.</span>
   </p>
 
   <div class="layers">
     <div class="layer l-epic">
-      <div class="lh"><span class="lname"><span class="zh">epic 记忆</span><span class="en">Epic memory</span></span><code>butler-epic</code></div>
-      <p><span class="zh">epic session 记下的规划和决定，加上各个 feature 的最新进展（最近的 10 个）：feature 一有新总结，Butler 就自动改写这一份。epic 下面所有 session 都读得到。</span><span class="en">Planning notes and decisions from the epic session, plus the latest state of its features (the 10 most recent), which Butler rewrites whenever a feature gets a new summary. Every session under the epic can read it.</span></p>
-      <div class="layer l-feature">
-        <div class="lh"><span class="lname"><span class="zh">feature 记忆</span><span class="en">Feature memory</span></span><code>butler-feature</code></div>
-        <p><span class="zh">前后端之间的约定，比如接口长什么样、谁负责哪一块。feature 的总控和它所有 ticket 的 session 共用。</span><span class="en">What frontend and backend agree on, such as the shape of an API and who owns which part. Shared by the feature's coordinator and every session of its tickets.</span></p>
-        <div class="tickets">
-          <div class="layer l-ticket">
-            <div class="lh"><span class="lname"><span class="zh">ticket 记忆</span><span class="en">Ticket memory</span></span><code>butler-memory</code></div>
-            <p><span class="zh">这个 ticket 的进度、决定、待办和每晚的交接。</span><span class="en">This ticket's progress, decisions, follow-ups and nightly handoffs.</span></p>
-          </div>
-          <div class="layer l-ticket">
-            <div class="lh"><span class="lname"><span class="zh">ticket 记忆</span><span class="en">Ticket memory</span></span><code>butler-memory</code></div>
-            <p><span class="zh">每个 ticket 一份，它的几个 session 共用。</span><span class="en">One per ticket, shared by that ticket's sessions.</span></p>
-          </div>
+      <div class="lh"><span class="lname"><span class="zh">epic 记忆</span><span class="en">Epic memory</span></span><code>butler-feature</code></div>
+      <p><span class="zh">epic 里各个 ticket 共用的约定，比如 API 约定或命名规则，能放大约 60 条。总控和 epic 里每个 ticket 的 session 共用；新存的约定会送到其他正在跑的 session。epic 里的 feature 只是分组，没有自己的记忆。</span><span class="en">Conventions shared across the epic's tickets, such as an API contract or a naming rule; it holds about 60. The coordinator and every ticket session of the epic share it, and a new convention is delivered to the other running sessions. Features inside an epic are only groups and have no memory of their own.</span></p>
+      <div class="tickets">
+        <div class="layer l-ticket">
+          <div class="lh"><span class="lname"><span class="zh">ticket 记忆</span><span class="en">Ticket memory</span></span><code>butler-memory</code></div>
+          <p><span class="zh">这个 ticket 的进度、决定、待办和每晚的交接。</span><span class="en">This ticket's progress, decisions, follow-ups and nightly handoffs.</span></p>
+        </div>
+        <div class="layer l-ticket">
+          <div class="lh"><span class="lname"><span class="zh">ticket 记忆</span><span class="en">Ticket memory</span></span><code>butler-memory</code></div>
+          <p><span class="zh">每个 ticket 一份，它的几个 session 共用。</span><span class="en">One per ticket, shared by that ticket's sessions.</span></p>
         </div>
       </div>
     </div>
@@ -476,100 +492,97 @@
     <div class="term static read">
       <div class="th"><span class="lights"><i></i><i></i><i></i></span><span class="tid">CART-13</span><span class="repo">web</span><span class="pill">frontend</span></div>
       <div class="tb">
-        <div><span class="mem-r">⏺ recall → coupon endpoint returns total + discount (cents)</span></div>
+        <div><span class="mem-r">✉ convention from CART-12: coupon endpoint returns total + discount (cents)</span></div>
         <div><span class="tool">⏺ <b>Edit</b> CartSummary.tsx — show discount, drop local sum</span></div>
         <div><span class="ok">  ✓ 24 passed</span></div>
       </div>
     </div>
   </div>
-  <p class="caption"><span class="zh">后端 session 改完接口就记下一句，同一个 feature 里的前端 session 下次 recall 时读到，照着改。中间没有人转述，总控也不用去敲前端的终端。</span><span class="en">The backend session notes the API change once it lands; the frontend session in the same feature reads it on its next recall and follows it. Nobody relays it, and no coordinator has to type it into the frontend's terminal.</span></p>
+  <p class="caption"><span class="zh">后端 session 改完接口就记下一句。Butler 把它送进同一个 epic 里其他在跑的 session 的信箱，前端 session 在下一次调用工具时收到，照着改。中间不用人转述。</span><span class="en">The backend session notes the API change once it lands. Butler puts it in the mailbox of the epic's other running sessions, and the frontend session gets it at its next tool call and follows it. Nobody relays it by hand.</span></p>
 
   <div class="facts">
     <div class="fact">
-      <h3><span class="zh">新 feature 接得上前面的</span><span class="en">A new feature picks up where others left off</span></h3>
-      <p><span class="zh">feature 的总控第一次打开时，会收到同一个 epic 里其他 feature 的名字、状态、最新进展、阻碍、决定和未决问题，已归档的也在内。之后它随时可以用 <code>epic_context</code> 读最新的情况。</span><span class="en">When a feature's coordinator first opens, it receives the name, status, latest progress, blockers, decisions and open questions of the epic's other features, archived ones included. Later it can read the latest with <code>epic_context</code>.</span></p>
+      <h3><span class="zh">长 session 交接以后接着做</span><span class="en">Long sessions hand off and carry on</span></h3>
+      <p><span class="zh">session 的上下文太长时，Butler 先让它写一份交接，等记忆存好，再把它清空。清空后它从记忆里找回交接，接着做手上的事，而不是停下来等你下一句。</span><span class="en">When a session's context grows too long, Butler has it write a handoff, waits until memory has stored it, and clears the session. It recalls the handoff and carries on with what it was doing instead of waiting for your next instruction.</span></p>
     </div>
     <div class="fact">
       <h3><span class="zh">总控看得到每个 session 在做什么</span><span class="en">The coordinator sees what every session is doing</span></h3>
-      <p><span class="zh">总控用 <code>list_sessions</code> 看每个 session 在写代码、跑测试、等 CI 还是在等你，用 <code>session_activity</code> 看某一个的动态和最后一段命令输出。</span><span class="en">The coordinator uses <code>list_sessions</code> to see whether each session is writing code, running tests, watching CI or waiting for you, and <code>session_activity</code> for one session's activity and its last command output.</span></p>
+      <p><span class="zh">总控用 <code>list_sessions</code> 看每个 session 在写代码、跑测试、等 CI 还是在等你，用 <code>session_activity</code> 看某一个的最后一段命令输出，用 <code>send_message</code> 往它的信箱里放一句话，在干活时也送得到。</span><span class="en">The coordinator uses <code>list_sessions</code> to see whether each session is writing code, running tests, watching CI or waiting for you, <code>session_activity</code> for one session's last command output, and <code>send_message</code> to drop a message in its mailbox, even while it is working.</span></p>
     </div>
     <div class="fact">
       <h3><span class="zh">记忆在你自己的电脑上</span><span class="en">The memory lives on your computer</span></h3>
-      <p><span class="zh">这些记忆都存在本机的 SQLite 里，在 ticket 页的「记忆」标签能看到每一条的来历。Butler 自己写进去的交接、决定和待办不需要任何模型 key。</span><span class="en">All of it is stored in local SQLite, and the ticket page's Memory tab shows each entry's history. What Butler writes itself (handoffs, decisions, follow-ups) needs no model key.</span></p>
+      <p><span class="zh">这些记忆存在本机的 SQLite 里，在 ticket 页「记录」tab 的「记忆」一节能看到每一条的来历。StateCore 不调用任何模型，记忆 server 也拿不到模型 key。</span><span class="en">It is stored in local SQLite, and the Memory section of a ticket's Log tab shows each entry's history. StateCore calls no model, and the memory servers get no model API key.</span></p>
     </div>
   </div>
 </section>
 
-<section class="sec" id="now">
-  <p class="kicker"><span class="zh">「现在」页</span><span class="en">The Now page</span></p>
-  <h2><span class="zh">打开 Butler，先看到的是需要你的</span><span class="en">Open Butler and see what needs you first</span></h2>
-  <div class="now-grid">
-    <div class="now-copy">
-      <p><span class="zh">首页「现在」列出 Butler 开的每一个 session，按 epic、feature、ticket 分组。每一行写着它此刻在做什么：写代码（哪个文件）、跑测试、等 CI、思考中，后面是它的 PR 和 CI，以及这个状态持续了多久。</span><span class="en">The home page, Now, lists every session Butler opened, grouped by epic, feature and ticket. Each row says what the session is doing right now (writing code and in which file, running tests, watching CI, thinking), followed by its PR and CI and how long it has been at it.</span></p>
-      <p><span class="zh">等你的 session 置顶在「需要你」里，原因只有三种：它问了你一个问题、它停在权限确认上、或者它卡住了。侧栏的「现在」后面会显示有几个。</span><span class="en">Sessions waiting on you are pinned at the top under Needs you, for one of three reasons: they asked you a question, they stopped on a permission prompt, or they are stuck. The sidebar shows how many there are.</span></p>
-      <p><span class="zh">点一行就打开它的终端，接手、回答或者批准都在那里。没在干活的 session 会折起来，页面底部有一行近 7 天的 token 用量。</span><span class="en">Click a row to open its terminal, where you take over, answer or approve. Idle sessions fold away, and the bottom of the page has one line of token usage for the last 7 days.</span></p>
+<section class="sec" id="your-turn">
+  <p class="kicker"><span class="zh">「轮到你」页</span><span class="en">The Your turn page</span></p>
+  <h2><span class="zh">在一个地方回答</span><span class="en">Answer in one place</span></h2>
+  <div class="turn-grid">
+    <div class="turn-copy">
+      <p><span class="zh">session 需要你的时候，侧栏第一项「轮到你」页上就会出现一张卡片：用 <code>ask_user</code> 问你的问题、权限确认、可以合并的 PR、请你 review 的 PR、没人推进的 PR。「要我继续吗？」这种回复不算。</span><span class="en">Whenever a session needs you, a card shows up on <b>Your turn</b>, the first entry in the sidebar: a question asked with <code>ask_user</code>, a permission prompt, a PR ready to merge, a review requested from you, a PR nobody is on. A reply such as "Shall I continue?" doesn't count.</span></p>
+      <p><span class="zh">停住不动的 session 也有一张卡片。它的 transcript、输出和 CPU 都不再变化时，Butler 用你自己的 claude 问一次它是不是真卡住了；是的话，卡片上写出可能的原因，带「去看看」「开修复 session」「没事，忽略」。不经你点击，什么都不会去修。</span><span class="en">A session that has stopped moving gets a card too. When its transcript, output and CPU stop changing, Butler asks your own <code>claude</code> whether it is really stuck; if so, the card gives the likely cause with <b>Take a look</b>, <b>Open a fix session</b> and <b>It's fine, ignore</b>. Nothing is fixed without your click.</span></p>
+      <p><span class="zh">点卡片上的按钮回答，答案会送进那个 session 的信箱；要多说几句，就在它的终端里打。卡片下面，「进行中」列出每个在跑的 session 在做什么，「运行情况」里有实况和一行近 7 天的 token 用量。</span><span class="en">Answer with a button on the card and it goes into the session's mailbox; for anything longer, type in its terminal. Below the cards, <b>In progress</b> lists what every running session is doing, and <b>How it is running</b> holds the Live view and a line of token usage for the last 7 days.</span></p>
     </div>
     <figure class="shot">
       <span class="badge"><span class="zh">演示数据</span><span class="en">Demo data</span></span>
-      <a class="zh" href="assets/now-zh.webp" target="_blank" rel="noopener"><img src="assets/now-zh.webp" width="1600" height="1158" loading="lazy" alt="Butler 的「现在」页：需要你的两个 session 置顶，下面按 epic 和 feature 分组列出每个 session 在做什么"></a>
-      <a class="en" href="assets/now-en.webp" target="_blank" rel="noopener"><img src="assets/now-en.webp" width="1600" height="1158" loading="lazy" alt="Butler's Now page: two sessions that need you pinned at the top, then every session grouped by epic and feature with what it is doing"></a>
-      <figcaption><span class="zh">真实的 Butler 界面；epic、feature、ticket 是通过 Butler 自己建出来的，session 的状态和用量是演示数据。</span><span class="en">The real Butler UI. The epic, features and tickets were created through Butler itself; the session states and usage are demo data.</span></figcaption>
+      <a class="zh" href="assets/your-turn-zh.webp" target="_blank" rel="noopener"><img src="assets/your-turn-zh.webp" width="1600" height="960" loading="lazy" alt="Butler 的「轮到你」页：一个带选项按钮的提问，和一个可以合并的 PR"></a>
+      <a class="en" href="assets/your-turn-en.webp" target="_blank" rel="noopener"><img src="assets/your-turn-en.webp" width="1600" height="960" loading="lazy" alt="Butler's Your turn page: a question with its options as buttons, and a PR ready to merge"></a>
+      <figcaption><span class="zh">真实的 Butler 界面，用的是演示数据。</span><span class="en">The real Butler UI with demo data.</span></figcaption>
     </figure>
   </div>
 </section>
 
-<section class="sec" id="usage">
-  <p class="kicker"><span class="zh">Token 用量</span><span class="en">Token usage</span></p>
-  <h2><span class="zh">一行字，看出 token 花在了哪儿</span><span class="en">One line that shows where the tokens went</span></h2>
+<section class="sec" id="compare">
+  <p class="kicker"><span class="zh">和并排开 session 比</span><span class="en">Compared with sessions side by side</span></p>
+  <h2><span class="zh">别的工具管 session，Butler 管的是活</span><span class="en">Other tools manage sessions. Butler manages the work.</span></h2>
   <p class="intro">
-    <span class="zh">一群 session 同时跑，最容易问的就是「这周用了多少，都用在哪了」。「现在」页最底下有一行近 7 天的用量，点开能看到按类型和按模型的拆分。</span>
-    <span class="en">With many sessions running at once, the obvious question is how much this week used, and on what. The bottom of the Now page has one line for the last 7 days; click it for the split by kind and by model.</span>
+    <span class="zh">同时开好几个 Claude Code session、每个跑在自己的 git worktree 里，现在已经很常见：Claude Code 官方桌面版能做，Conductor、Claude Squad 这类工具也能做。Butler 也这样跑 session，再把剩下落在你身上的活接过去。</span>
+    <span class="en">Running several Claude Code sessions side by side, each in its own git worktree, is common now: Claude Code's own desktop app does it, and so do tools like Conductor and Claude Squad. Butler runs sessions that way too, then takes over the jobs that are left to you.</span>
   </p>
-  <div class="usage-grid">
-    <div class="usage-card">
-      <span class="badge"><span class="zh">示例数据</span><span class="en">Sample data</span></span>
-      <div class="u-head">
-        <span class="u-label"><span class="zh">近 7 天</span><span class="en">Last 7 days</span></span>
-        <span class="u-big">412.6M <small><span class="zh">token</span><span class="en">tokens</span></small></span>
-      </div>
-      <div class="u-stats">
-        <span><b>58%</b> <span class="zh">缓存读取</span><span class="en">cache reads</span></span>
-        <span><b>11%</b> <span class="zh">上下文超过 20 万的轮次</span><span class="en">turns over 200k context</span></span>
-      </div>
-      <div class="u-cols">
-        <div>
-          <h3><span class="zh">按类型</span><span class="en">By kind</span></h3>
-          <ul class="bars">
-            <li style="--v:62%"><span><span class="zh">ticket session</span><span class="en">ticket sessions</span></span><b>62%</b></li>
-            <li style="--v:17%"><span><span class="zh">总控</span><span class="en">coordinators</span></span><b>17%</b></li>
-            <li style="--v:15%"><span><span class="zh">子 agent</span><span class="en">subagents</span></span><b>15%</b></li>
-            <li style="--v:6%"><span><span class="zh">后台任务</span><span class="en">background jobs</span></span><b>6%</b></li>
-          </ul>
-        </div>
-        <div>
-          <h3><span class="zh">按模型（按价格折算）</span><span class="en">By model (price-weighted)</span></h3>
-          <ul class="bars">
-            <li style="--v:81%"><span class="mono">claude-opus-5-5</span><b>81%</b></li>
-            <li style="--v:16%"><span class="mono">claude-sonnet-5-5</span><b>16%</b></li>
-            <li style="--v:3%"><span class="mono">claude-haiku-5-5</span><b>3%</b></li>
-          </ul>
-        </div>
-      </div>
+  <div class="cmp">
+    <div class="cmp-row cmp-head"><div></div><div><span class="zh">并排开几个 session</span><span class="en">Sessions side by side</span></div><div>Butler</div></div>
+    <div class="cmp-row">
+      <div><span class="zh">你交出去的是</span><span class="en">What you hand over</span></div>
+      <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">每个 session 一条提示词</span><span class="en">A prompt per session</span></div>
+      <div><span class="cmp-k">Butler</span><span class="zh">一个 epic，由总控拆成 ticket</span><span class="en">An epic, which the coordinator splits into tickets</span></div>
     </div>
-    <div class="usage-copy">
-      <div class="fact">
-        <h3><span class="zh">算进去的是什么</span><span class="en">What it counts</span></h3>
-        <p><span class="zh">Butler 打开的 session（在跑的和刚退出的）、它们的子 agent，以及 Butler 在后台跑的 claude：写交接、写 feature 总结、检查 session 是不是卡住了。</span><span class="en">The sessions Butler opened (running and just exited), their subagents, and the <code>claude</code> runs Butler starts in the background: handoffs, feature summaries and stuck checks.</span></p>
-      </div>
-      <div class="fact">
-        <h3><span class="zh">从哪里读</span><span class="en">Where it comes from</span></h3>
-        <p><span class="zh">直接读你本机上 Claude Code 的 transcript，不需要另外接什么。</span><span class="en">Claude Code's transcripts on your machine. There is nothing else to connect.</span></p>
-      </div>
-      <div class="fact">
-        <h3><span class="zh">占比只用来比较</span><span class="en">Shares are for comparing</span></h3>
-        <p><span class="zh">各项占比按相对价格加权，所以同样多的 token，用在 Opus 上比用在 Haiku 上占得多。Butler 不把它换算成钱。</span><span class="en">The shares are weighted by relative price, so the same tokens count for more on Opus than on Haiku. Butler doesn't convert them to money.</span></p>
-      </div>
+    <div class="cmp-row">
+      <div><span class="zh">谁来开 session</span><span class="en">Who opens the sessions</span></div>
+      <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">你</span><span class="en">You</span></div>
+      <div><span class="cmp-k">Butler</span><span class="zh">epic 总控，或者你</span><span class="en">The epic coordinator, or you</span></div>
     </div>
+    <div class="cmp-row">
+      <div><span class="zh">session 之间定下的事</span><span class="en">Decisions shared between sessions</span></div>
+      <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">你自己抄过去</span><span class="en">You copy them across</span></div>
+      <div><span class="cmp-k">Butler</span><span class="zh">存进 epic 记忆，送到正在跑的 session</span><span class="en">Epic memory, delivered to the running sessions</span></div>
+    </div>
+    <div class="cmp-row">
+      <div><span class="zh">问题在哪儿等你</span><span class="en">Where questions wait</span></div>
+      <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">各个终端里</span><span class="en">In each terminal</span></div>
+      <div><span class="cmp-k">Butler</span><span class="zh">「轮到你」页上</span><span class="en">On the Your turn page</span></div>
+    </div>
+    <div class="cmp-row">
+      <div><span class="zh">合并顺序和冲突</span><span class="en">Merge order and conflicts</span></div>
+      <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">你自己理</span><span class="en">You work them out</span></div>
+      <div><span class="cmp-k">Butler</span><span class="zh">feature 按顺序推；先合的放行，另一个被告知要 rebase</span><span class="en">Features in order; the first merge goes ahead, the other is told to rebase</span></div>
+    </div>
+    <div class="cmp-row">
+      <div><span class="zh">跑太久的 session</span><span class="en">A session that ran too long</span></div>
+      <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">开个新的，从头再讲一遍</span><span class="en">You start a new one and explain again</span></div>
+      <div><span class="cmp-k">Butler</span><span class="zh">写交接、清空，从记忆里接着做</span><span class="en">Handed off, cleared and resumed from memory</span></div>
+    </div>
+    <div class="cmp-row">
+      <div><span class="zh">想知道进展</span><span class="en">Knowing where things stand</span></div>
+      <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">一个个看终端</span><span class="en">Read the terminals</span></div>
+      <div><span class="cmp-k">Butler</span><span class="zh">轮到谁、PR 阶段、每晚的状态</span><span class="en">Whose turn, PR stages, nightly status</span></div>
+    </div>
+  </div>
+  <div class="aside">
+    <strong><span class="zh">合并仍然由你来点。</span><span class="en">You still click merge.</span></strong>
+    <span class="zh">「设置 › 自动化」里有档位。默认的「手动」不替你往外做任何事；「半自动」会把 PR 评论转给 session、不稳定的 CI 失败重跑一次、栈自动 rebase 并推送。不管哪一档，合并要么是你在 GitHub 上点，要么是 session 要跑 <code>gh pr merge</code> 时你点了同意。每一个对外动作都记在「审计」页上。</span>
+    <span class="en"><b>Settings › Automation</b> has a level. <b>Manual</b>, the default, does nothing outside on your behalf; <b>Semi-automatic</b> passes PR comments to the session, reruns a flaky CI failure once, and rebases and pushes stacks. Either way, a merge is your click on GitHub, or your yes when a session asks to run <code>gh pr merge</code>. Every outward action is listed on the <b>Audit</b> page.</span>
   </div>
 </section>
 
@@ -577,33 +590,33 @@
   <p class="kicker"><span class="zh">本地优先</span><span class="en">Local-first</span></p>
   <h2><span class="zh">它是你电脑上的一个应用，不是一项服务</span><span class="en">An app on your computer, not a service</span></h2>
   <p class="intro">
-    <span class="zh">Butler 不在你和 Claude Code 之间加一层服务器。它管的是你自己的 claude，用的是你自己的登录。</span>
-    <span class="en">Butler puts no server between you and Claude Code. It manages your own <code>claude</code>, signed in as you.</span>
+    <span class="zh">Butler 自己没有模型，也没有 API key：后台的活（交接、总结、卡住检测）都经你自己的 claude 做，用的是你自己的登录。它也不发遥测。</span>
+    <span class="en">Butler has no model or API key of its own: its background work (handoffs, summaries, stuck checks) runs through your own <code>claude</code>, signed in as you. It sends no telemetry.</span>
   </p>
   <div class="facts six">
     <div class="fact">
       <h3><span class="zh">数据在本机的 SQLite 里</span><span class="en">Data in local SQLite</span></h3>
-      <p><span class="zh">ticket、session、交接、设置在 <code class="path">~/.butler/app.db</code>，记忆在 <code class="path">~/.butler/statecore/statecore.db</code>。升级重装时这些都保留。</span><span class="en">Tickets, sessions, handoffs and settings are in <code class="path">~/.butler/app.db</code>; memory is in <code class="path">~/.butler/statecore/statecore.db</code>. Both are kept when you install a new version.</span></p>
-    </div>
-    <div class="fact">
-      <h3><span class="zh">没有账号，没有遥测</span><span class="en">No accounts, no telemetry</span></h3>
-      <p><span class="zh">Butler 没有账号，不做授权校验，不发遥测，也不检查更新。它没有自己的 Jira、GitHub 或 Claude 登录。</span><span class="en">Butler has no accounts or license checks, sends no telemetry and doesn't check for updates. It has no Jira, GitHub or Claude login of its own.</span></p>
+      <p><span class="zh">ticket、session、交接、设置在 <code class="path">~/.butler/app.db</code>，记忆在 <code class="path">~/.butler/statecore/statecore.db</code>。装新版本时这些都保留。</span><span class="en">Tickets, sessions, handoffs and settings are in <code class="path">~/.butler/app.db</code>; memory is in <code class="path">~/.butler/statecore/statecore.db</code>. Both are kept when you install a new version.</span></p>
     </div>
     <div class="fact">
       <h3><span class="zh">数据怎么离开你的电脑</span><span class="en">How data leaves your machine</span></h3>
-      <p><span class="zh">只有两条路：你自己的 claude，以及你配置了才有的个人 LLM API。这个 API 只在隐私档位为「完整」时用来做记忆提炼，每一次调用都记在「审计」页上。默认档位是「仅元数据」，不会调用它。</span><span class="en">Only through your own <code>claude</code> and, if you configure one, a personal LLM API. That API is called only at the full privacy level, for memory distillation, and every call is logged on the Audit page. The default level, metadata, never calls it.</span></p>
+      <p><span class="zh">只经你自己的 <code>claude</code>、<code>git</code> 和 <code>gh</code>，另外就是你自己设了的通知 webhook。经 <code>gh</code> 的对外动作（比如回复 PR 评论）每一种都有自己的开关，默认全关，做了的都记在「审计」页上。</span><span class="en">Only through your own <code>claude</code>, <code>git</code> and <code>gh</code>, plus a notification webhook if you set one up. Outward actions through <code>gh</code>, such as replying to a PR comment, each have their own switch, all off by default, and each one taken is listed on the Audit page.</span></p>
     </div>
     <div class="fact">
-      <h3><span class="zh">只有一处联网代码</span><span class="en">One piece of network code</span></h3>
-      <p><span class="zh">Butler 里唯一的联网代码，是给可选的个人 API 用的隐私网关。这一点由一条 lint 规则保证。</span><span class="en">The only network code in Butler is the privacy gateway for the optional personal API. A lint rule enforces this.</span></p>
+      <h3><span class="zh">没有账号，没有遥测</span><span class="en">No accounts, no telemetry</span></h3>
+      <p><span class="zh">没有账号，不做授权校验，也没有自己的 Jira、GitHub 或 Claude 登录。每天一次经你的 <code>gh</code> 查有没有新版本，只提示你，不下载不安装，可以关掉。</span><span class="en">No accounts or license checks, and no Jira, GitHub or Claude login of its own. Once a day it asks GitHub through your <code>gh</code> whether a newer release is out and only tells you. It never downloads or installs anything, and you can turn it off.</span></p>
+    </div>
+    <div class="fact">
+      <h3><span class="zh">联网代码由 lint 把关</span><span class="en">Network code, guarded by a lint rule</span></h3>
+      <p><span class="zh">除了通知 webhook 的发送，以及 127.0.0.1 上给共享 MCP 用的监听，Butler 没有自己的联网代码。这一点由一条 lint 规则保证。</span><span class="en">Apart from the notification webhook sender and the shared MCP's listener on 127.0.0.1, Butler has no network code of its own. A lint rule enforces this.</span></p>
     </div>
     <div class="fact">
       <h3><span class="zh">只在你点了之后改 Claude Code 配置</span><span class="en">Claude Code config changes only when you click</span></h3>
-      <p><span class="zh">点「安装 hook」时，Butler 往用户级 <code>settings.json</code> 加四个 hook（第一次会先备份这个文件），再写一个 <code>/handoff</code> 命令，你原有的 hook 和命令都保留，在设置里随时能卸载。记忆不用 <code>claude mcp add</code> 注册，而是在它启动的每个 session 上传 <code>--mcp-config</code>。</span><span class="en">When you click the hook install, Butler adds four hooks to your user-level <code>settings.json</code> (backing the file up the first time) and writes a <code>/handoff</code> command, keeping your other hooks and commands. You can uninstall from Settings. Memory is never registered with <code>claude mcp add</code>; Butler passes <code>--mcp-config</code> to each session it starts.</span></p>
+      <p><span class="zh">点「安装」时，Butler 往用户级 <code>settings.json</code> 加四个 hook（第一次会先备份这个文件），再写一个 <code>/handoff</code> 命令，你原有的 hook 和命令都保留；「设置 → 健康检查 → 卸载」可以移除。记忆不用 <code>claude mcp add</code> 注册，而是在它启动的每个 session 上传 <code>--mcp-config</code>。</span><span class="en">When you click the hook install, Butler adds four hooks to your user-level <code>settings.json</code> (backing the file up the first time) and writes a <code>/handoff</code> command, keeping your other hooks and commands. <b>Settings → Health check → Uninstall</b> removes them. Memory is never registered with <code>claude mcp add</code>; Butler passes <code>--mcp-config</code> to each session it starts.</span></p>
     </div>
     <div class="fact">
-      <h3><span class="zh">MIT 开源</span><span class="en">MIT licensed</span></h3>
-      <p><span class="zh">源码在 GitHub 上，可以自己读、自己构建。Intel Mac 需要从源码构建。</span><span class="en">The source is on GitHub to read and build yourself. Intel Macs need to build from source.</span></p>
+      <h3><span class="zh">反馈由你自己发</span><span class="en">Feedback you send yourself</span></h3>
+      <p><span class="zh">「帮助 → 发送反馈…」（或「设置 → 关于」里的按钮）会在浏览器里打开填好的 GitHub issue，由你自己提交。诊断可选，脱敏后先给你看。Butler 自己不往外发任何东西。</span><span class="en"><b>Help → Send Feedback…</b> (or the button under <b>Settings → About</b>) opens a filled-in GitHub issue in your browser, and you submit it. Diagnostics are optional, redacted and shown to you first. Butler sends nothing on its own.</span></p>
     </div>
   </div>
 </section>
@@ -612,8 +625,8 @@
   <p class="kicker"><span class="zh">安装</span><span class="en">Install</span></p>
   <h2><span class="zh">下载、放行、跑一遍向导</span><span class="en">Download, allow it, run the wizard</span></h2>
   <p class="intro">
-    <span class="zh">安装包在 GitHub 的 Releases 页上。目前的构建没有代码签名，所以浏览器和系统都会提醒你，下面写了怎么放行。</span>
-    <span class="en">The installers are on the GitHub Releases page. The builds are not code-signed yet, so your browser and OS will warn you; here is how to allow them.</span>
+    <span class="zh">安装包在 GitHub 的 Releases 页上。目前的构建还没有代码签名，所以浏览器和系统都会提醒你，第一次打开要多做一步，下面写了怎么放行。</span>
+    <span class="en">The installers are on the GitHub Releases page. The builds are not code-signed yet, so your browser and OS will warn you and the first launch needs one extra step. Here is how to allow it.</span>
   </p>
   <div class="install-top">
     <a class="cta primary" href="https://github.com/yul761/butler/releases/latest">
@@ -623,10 +636,11 @@
     <div class="req">
       <h3><span class="zh">需要</span><span class="en">You need</span></h3>
       <ul>
-        <li><span class="zh">Apple 芯片的 macOS，或 Windows 10/11 x64</span><span class="en">macOS on Apple silicon, or Windows 10/11 x64</span></li>
-        <li><span class="zh">装好并登录的 Claude Code，终端里 <code>claude --version</code> 能跑</span><span class="en">Claude Code installed and logged in: <code>claude --version</code> works in a terminal</span></li>
+        <li><span class="zh">Apple 芯片的 macOS，或 Windows 10/11 x64。Intel Mac 可以从源码构建。</span><span class="en">macOS on Apple silicon, or Windows 10/11 x64. Intel Macs can build from source.</span></li>
+        <li><span class="zh">装好并登录的 Claude Code：先在终端里运行一次 <code>claude</code> 登录，<code>claude --version</code> 要能跑</span><span class="en">Claude Code installed and logged in: run <code>claude</code> once in a terminal to log in, and <code>claude --version</code> must work</span></li>
         <li><span class="zh"><code>PATH</code> 上有 Git；Windows 上装 Git for Windows</span><span class="en">Git on <code>PATH</code>; on Windows, Git for Windows</span></li>
-        <li><span class="zh">可选：在 Claude Code 里配好 tracker 的 MCP（Jira、Linear、GitLab…），交接才能读 ticket 状态</span><span class="en">Optional: a tracker MCP server (Jira, Linear, GitLab, …) in Claude Code, so handoffs can read ticket status</span></li>
+        <li><span class="zh">可选：登录好的 GitHub CLI（<code>gh</code>）。不装 session 照样能用，只是 PR、CI、review 相关的功能不工作</span><span class="en">Optional: the GitHub CLI (<code>gh</code>), logged in. Sessions work without it, but PR, CI and review features don't</span></li>
+        <li><span class="zh">可选：在 Claude Code 里配好 tracker 的 MCP（Jira、Linear、GitLab…），交接才能读到 ticket 状态</span><span class="en">Optional: a tracker MCP server (Jira, Linear, GitLab, …) in Claude Code, so handoffs can read ticket status</span></li>
       </ul>
     </div>
   </div>
@@ -635,31 +649,31 @@
       <h3>macOS <span class="file">Butler-x.y.z-arm64.dmg</span></h3>
       <ol>
         <li><span class="zh">打开 <code>.dmg</code>，把 Butler 拖进「应用程序」。</span><span class="en">Open the <code>.dmg</code> and drag Butler into Applications.</span></li>
-        <li><span class="zh">打开 Butler，macOS 会拒绝，说无法验证这个 App。</span><span class="en">Open Butler. macOS refuses and says it cannot verify the app.</span></li>
-        <li><span class="zh">打开「系统设置 → 隐私与安全性」，往下找到关于 Butler 的提示，点「仍要打开」并确认。或者在终端里去掉隔离标记：</span><span class="en">Open <b>System Settings → Privacy &amp; Security</b>, find the message about Butler, click <b>Open Anyway</b> and confirm. Or remove the quarantine flag in Terminal:</span></li>
+        <li><span class="zh">打开 Butler，macOS 会拒绝，提示 Apple 无法验证这个 App。</span><span class="en">Open Butler. macOS refuses: it says Apple cannot verify the app.</span></li>
+        <li><span class="zh">打开「系统设置 → 隐私与安全性」，往下滚到关于 Butler 的提示，点「仍要打开」并确认。macOS 14 及更早版本上，也可以在「应用程序」里右键 Butler，选「打开」，再点一次「打开」。或者在终端里运行：</span><span class="en">Open <b>System Settings → Privacy &amp; Security</b>, scroll to the message about Butler, click <b>Open Anyway</b> and confirm. On macOS 14 and earlier you can instead right-click Butler in Applications, choose <b>Open</b>, then <b>Open</b> again. Or, in Terminal:</span></li>
       </ol>
       <div class="cmd"><pre><code id="xattr-cmd">xattr -dr com.apple.quarantine /Applications/Butler.app</code></pre><button type="button" class="copy" data-copy="xattr-cmd"><span class="zh">复制</span><span class="en">Copy</span></button></div>
-      <p class="os-note"><span class="zh">如果 macOS 说 Butler「已损坏，无法打开」，就没有「仍要打开」按钮，用上面的终端命令。每次下载新版本都要再做一次。</span><span class="en">If macOS says Butler "is damaged and can't be opened", there is no Open Anyway button; use the Terminal command. Repeat this after every new download.</span></p>
+      <p class="os-note"><span class="zh">如果 macOS 说 Butler「已损坏，无法打开」，就没有「仍要打开」按钮，用上面的终端命令。每次下载新版本后都要重复一遍。</span><span class="en">If macOS says Butler "is damaged and can't be opened", there is no Open Anyway button; use the Terminal command. Repeat this after every new download.</span></p>
     </div>
     <div class="os">
       <h3>Windows <span class="file">Butler-Setup-x.y.z.exe</span></h3>
       <ol>
-        <li><span class="zh">浏览器可能提醒这个下载。在 Edge 里打开下载项的「…」菜单，选「保留」。</span><span class="en">Your browser may warn about the download. In Edge, open the download's <b>…</b> menu and choose <b>Keep</b>.</span></li>
-        <li><span class="zh">运行安装程序。SmartScreen 提示「Windows 已保护你的电脑」时，点「更多信息 → 仍要运行」。</span><span class="en">Run the installer. When SmartScreen says "Windows protected your PC", click <b>More info → Run anyway</b>.</span></li>
-        <li><span class="zh">选「仅为我安装」（不需要管理员权限），再选安装目录。</span><span class="en">Pick "only for me" (no admin rights needed) and an install folder.</span></li>
+        <li><span class="zh">运行 <code>Butler-Setup-x.y.z.exe</code>。如果 Edge 警告这个下载，在下载项的「…」菜单里选「保留」。</span><span class="en">Run <code>Butler-Setup-x.y.z.exe</code>. If Edge warns about the download, choose <b>Keep</b> in the download's <b>…</b> menu.</span></li>
+        <li><span class="zh">SmartScreen 提示「Windows 已保护你的电脑」时，点「更多信息 → 仍要运行」。</span><span class="en">When SmartScreen says "Windows protected your PC", click <b>More info → Run anyway</b>.</span></li>
+        <li><span class="zh">选「仅为我安装」（不需要管理员权限）。</span><span class="en">Pick "only for me" (no admin rights needed).</span></li>
       </ol>
-      <p class="os-note"><span class="zh">如果 Windows 11 开着「智能应用控制」，它会直接拦下未签名的应用，没有「仍要运行」，这时装不了 Butler。</span><span class="en">If Windows 11 Smart App Control is on, it blocks unsigned apps with no Run anyway option, and Butler can't be installed.</span></p>
+      <p class="os-note"><span class="zh">如果开着 Windows 11 的「智能应用控制」，它会拦下未签名的应用，而且没法放行，开着它时装不了 Butler。关掉它之前请先看 Microsoft 的说明。</span><span class="en">If Windows 11 Smart App Control is on, it blocks unsigned apps with no way around it, so Butler can't be installed while it is on. Check Microsoft's documentation before you turn it off.</span></p>
     </div>
   </div>
   <div class="aside">
-    <strong><span class="zh">第一次打开会有一个向导。</span><span class="en">The first launch opens a short wizard.</span></strong>
-    <span class="zh">它会找到你的 claude，问你要不要装 hook 和 <code>/handoff</code> 命令，让你挑交接可以调用的只读 tracker 工具，最后是可选的隐私档位和个人 API。没有自动更新：升级就是下载新版本装在旧版上，<code>~/.butler</code> 里的数据保留。细节见 README 的 <a href="https://github.com/yul761/butler#install">Install</a> 和 <a href="https://github.com/yul761/butler#first-run">First run</a>。</span>
-    <span class="en">It finds your <code>claude</code>, offers to install the hooks and the <code>/handoff</code> command, lets you pick the read-only tracker tools handoffs may call, and ends with the optional privacy level and personal API. There is no auto-update: to upgrade, install the new version over the old one, and your data in <code>~/.butler</code> is kept. Details are in the README's <a href="https://github.com/yul761/butler#install">Install</a> and <a href="https://github.com/yul761/butler#first-run">First run</a> sections.</span>
+    <strong><span class="zh">第一次打开是一个两步的向导。</span><span class="en">The first launch opens a two-step wizard.</span></strong>
+    <span class="zh">第一步检查 Claude Code：在你的 <code>PATH</code> 和常见的安装位置找 <code>claude</code>，<code>claude</code> 或 <code>gh</code> 看起来没登录时会提示。第二步安装 hook 和 <code>/handoff</code> 命令：这些 hook 只往 Butler 的 <code>inbox</code> 文件夹里放小 JSON 文件，从不访问网络。哪一步过不去，点「卡住了？告诉我们」会打开预填好的 GitHub issue。tracker 工具和权限档案之后在设置页里配。升级就是下载新版本装在旧版上，<code>~/.butler</code> 里的数据保留。细节见 README 的 <a href="https://github.com/yul761/butler/blob/main/README.zh-CN.md#安装">安装</a> 和 <a href="https://github.com/yul761/butler/blob/main/README.zh-CN.md#首次运行">首次运行</a>。</span>
+    <span class="en">Step one checks Claude Code: it finds <code>claude</code> on your <code>PATH</code> or in the usual install folders, and tells you if <code>claude</code> or <code>gh</code> doesn't look logged in. Step two installs the hooks and the <code>/handoff</code> command; the hooks only drop small JSON files into Butler's <code>inbox</code> folder and never touch the network. If a step fails, <b>Stuck? Tell us</b> opens a prefilled GitHub issue. Tracker tools and the permission profile are set later in Settings. To upgrade, install the new version over the old one; your data in <code>~/.butler</code> is kept. Details are in the README's <a href="https://github.com/yul761/butler#install">Install</a> and <a href="https://github.com/yul761/butler#first-run">First run</a> sections.</span>
   </div>
 </section>
 
 <section class="sec" id="end">
-  <p class="end-line"><span class="zh">如果你也是一个人开着一堆 Claude Code，可以试试看。</span><span class="en">If you also keep a pile of Claude Code sessions open, give it a try.</span></p>
+  <p class="end-line"><span class="zh">如果你也同时开着好几个 Claude Code、已经顾不过来，可以试试看。</span><span class="en">If you run several Claude Code sessions and keep losing track of them, give it a try.</span></p>
   <div class="ctas">
     <a class="cta primary" href="https://github.com/yul761/butler/releases/latest">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
@@ -667,19 +681,20 @@
     </a>
     <a class="cta ghost" href="https://github.com/yul761/butler">GitHub</a>
   </div>
+  <p class="fine"><span class="zh">有问题或想法？去 <a href="https://github.com/yul761/butler/discussions">GitHub Discussions</a> 问，或者在 Butler 里用「帮助 → 发送反馈…」。</span><span class="en">Questions or ideas? Ask in <a href="https://github.com/yul761/butler/discussions">GitHub Discussions</a>, or use Help → Send Feedback… in Butler.</span></p>
 </section>
 </main>
 
 <footer class="site-foot">
-  <span><span class="zh">Butler · MIT 开源 · 作者 Yuchen Lin</span><span class="en">Butler · MIT licensed · made by Yuchen Lin</span></span>
-  <span><a href="https://github.com/yul761/butler">GitHub</a> · <a href="https://github.com/yul761/butler#readme">README</a> · <a href="https://github.com/yul761/butler/releases/latest"><span class="zh">下载</span><span class="en">Download</span></a></span>
+  <span><span class="zh">Butler · MIT 开源 · 作者 Yuchen Lin · 本页对应 Butler 4.1</span><span class="en">Butler · MIT licensed · made by Yuchen Lin · this page describes Butler 4.1</span></span>
+  <span><a href="https://github.com/yul761/butler">GitHub</a> · <a class="zh" href="https://github.com/yul761/butler/blob/main/docs/how-it-works.zh-CN.md">工作原理</a><a class="en" href="https://github.com/yul761/butler/blob/main/docs/how-it-works.md">How it works</a> · <a href="https://github.com/yul761/butler/releases"><span class="zh">更新记录</span><span class="en">Release notes</span></a> · <a href="https://github.com/yul761/butler/releases/latest"><span class="zh">下载</span><span class="en">Download</span></a></span>
 </footer>
 
 <script>
   (function () {
     var meta = {
-      en: { title: "Butler — many Claude Code sessions, one shared memory", lang: "en" },
-      zh: { title: "Butler — 一群 Claude Code，一份共享记忆", lang: "zh-CN" }
+      en: { title: "Butler — one coordinator for your Claude Code sessions", lang: "en" },
+      zh: { title: "Butler — 一个总控，管好你的 Claude Code session", lang: "zh-CN" }
     };
     var root = document.documentElement;
     window.butlerLang = function () { return root.classList.contains("is-zh") ? "zh" : "en"; };
@@ -852,9 +867,9 @@
       recall: { zh: "前端金额按分传整数", en: "frontend sends integer cents" },
       follow: ["tool", "Edit", "webhook.ts — parse amount as cents"] },
     { from: "CART-14", to: "CART-16",
-      note: { zh: "PR #128 已合并，main 上有新的 orders 表结构", en: "PR #128 merged; main has the new orders schema" },
-      recall: { zh: "#128 已合并，先 rebase", en: "#128 merged — rebase first" },
-      follow: ["tool", "Bash", "git rebase origin/main"] }
+      note: { zh: "订单金额存在 orders.total_cents，不用浮点列", en: "Order totals live in orders.total_cents, no float columns" },
+      recall: { zh: "金额存 orders.total_cents，不用浮点", en: "totals in orders.total_cents, no floats" },
+      follow: ["tool", "Edit", "0042_order_totals.sql — integer cents"] }
   ];
 
   // ---------- wires + sparks ----------
@@ -917,14 +932,21 @@
       fly(src, true, false, function () {
         src.el.classList.remove("write"); src.busy = false;
         notes.unshift({ src: e.from, text: e.note }); notes = notes.slice(0, 6); freshIdx = 0; total++; renderNotes(); pulse();
+        // A convention saved to the epic memory is delivered to every other running session of the epic.
         setTimeout(function () {
-          dst.el.classList.add("read");
-          fly(dst, false, true, function () {
-            dst.queue.push({ html: '<span class="mem-r">⏺ recall → ' + esc(T(e.recall)) + '</span>', pill: "read", done: function () {
-              dst.queue.push({ html: lineHTML(e.follow[0], e.follow[1], e.follow[2]), pill: "code", done: function () {
-                dst.el.classList.remove("read"); dst.busy = false; freshIdx = -1; renderNotes();
+          var conv = (lang === "zh" ? "✉ 约定 · " : "✉ convention · ") + e.from + ": " + T(e.recall);
+          terms.forEach(function (t) {
+            if (t === src || !shown(t)) return;
+            var primary = t === dst;
+            t.el.classList.add("read");
+            fly(t, false, true, function () {
+              t.queue.push({ html: '<span class="mem-r">' + esc(conv) + '</span>', done: function () {
+                if (!primary) { t.el.classList.remove("read"); return; }
+                dst.queue.push({ html: lineHTML(e.follow[0], e.follow[1], e.follow[2]), pill: "code", done: function () {
+                  dst.el.classList.remove("read"); dst.busy = false; freshIdx = -1; renderNotes();
+                } });
               } });
-            } });
+            });
           });
         }, 700);
       });

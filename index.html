@@ -424,14 +424,14 @@
     <li class="step">
       <span class="num">4</span>
       <h3><span class="zh">你回答问题，点合并</span><span class="en">You answer, and you click merge</span></h3>
-      <p><span class="zh">提问、权限确认、可以合并的 PR，都变成「轮到你」页上的卡片。合并仍然由你来点。每晚 Butler 用你自己登录的 claude 给有进展的 ticket 写一份交接（handoff），作为它的状态。</span><span class="en">Questions, permission prompts and PRs ready to merge become cards on <b>Your turn</b>. You still click merge. Each night Butler asks your own logged-in <code>claude</code> to write a handoff for every ticket that moved, which becomes its status.</span></p>
+      <p><span class="zh">提问、权限确认、可以合并的 PR，都变成「轮到你」页上的卡片。合并仍然由你来点。每个工作日在你选定的时间（默认 16:00），Butler 用你自己登录的 claude 给有动静的 ticket 写一份交接（handoff），作为它的状态。</span><span class="en">Questions, permission prompts and PRs ready to merge become cards on <b>Your turn</b>. You still click merge. Every working day, at a time you choose (4 pm by default), Butler asks your own logged-in <code>claude</code> to write a handoff for every ticket that had activity, which becomes its status.</span></p>
     </li>
   </ol>
 
   <div class="merge-wrap merge-grid">
     <div>
       <h3 class="sub-h"><span class="zh">合并之前先检查，分支不撞车</span><span class="en">Merges are checked, so branches don't collide</span></h3>
-      <p><span class="zh">Butler 盯着它开的 session，每次往目标分支合并之前都先用 git 检查。两个分支冲突时，先合的放行，另一个 ticket 会被告知要 rebase；和一个正在进行的合并冲突时，要等那个合完。</span><span class="en">Butler watches the sessions it opens and checks every merge into a target branch with git before it happens. When two branches conflict, the first to merge goes ahead and the other ticket is told to rebase; a merge that conflicts with one already under way waits until that one lands.</span></p>
+      <p><span class="zh">Butler 盯着它开的 session，每次往目标分支合并之前都先用 git 检查。两个分支冲突时，先合的放行，另一个 ticket 合并前会被告知要先 rebase；和一个正在进行的合并冲突时，要等那个合完。</span><span class="en">Butler watches the sessions it opens and checks every merge into a target branch with git before it happens. When two branches conflict, the first to merge goes ahead and the other ticket is told to rebase before it merges; a merge that conflicts with one already under way waits until that one lands.</span></p>
       <p><span class="zh">epic 页按 feature 的顺序列出 ticket，每一行写着现在轮到谁：你、agent，还是 CI 或某位 reviewer。</span><span class="en">The epic page lists the tickets by feature, in order, and each row says whose turn it is: yours, an agent's, or CI's or a reviewer's.</span></p>
     </div>
     <figure class="shot">
@@ -566,7 +566,7 @@
     <div class="cmp-row">
       <div><span class="zh">合并顺序和冲突</span><span class="en">Merge order and conflicts</span></div>
       <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">你自己理</span><span class="en">You work them out</span></div>
-      <div><span class="cmp-k">Butler</span><span class="zh">feature 按顺序推；先合的放行，另一个被告知要 rebase</span><span class="en">Features in order; the first merge goes ahead, the other is told to rebase</span></div>
+      <div><span class="cmp-k">Butler</span><span class="zh">feature 按顺序推；先合的放行，另一个合并前被告知要先 rebase</span><span class="en">Features in order; the first merge goes ahead, the other is told to rebase before merging</span></div>
     </div>
     <div class="cmp-row">
       <div><span class="zh">跑太久的 session</span><span class="en">A session that ran too long</span></div>
@@ -581,8 +581,8 @@
   </div>
   <div class="aside">
     <strong><span class="zh">合并仍然由你来点。</span><span class="en">You still click merge.</span></strong>
-    <span class="zh">「设置 › 自动化」里有档位。默认的「手动」不替你往外做任何事；「半自动」会把 PR 评论转给 session、不稳定的 CI 失败重跑一次、栈自动 rebase 并推送。不管哪一档，合并要么是你在 GitHub 上点，要么是 session 要跑 <code>gh pr merge</code> 时你点了同意。每一个对外动作都记在「审计」页上。</span>
-    <span class="en"><b>Settings › Automation</b> has a level. <b>Manual</b>, the default, does nothing outside on your behalf; <b>Semi-automatic</b> passes PR comments to the session, reruns a flaky CI failure once, and rebases and pushes stacks. Either way, a merge is your click on GitHub, or your yes when a session asks to run <code>gh pr merge</code>. Every outward action is listed on the <b>Audit</b> page.</span>
+    <span class="zh">「设置 › 自动化」里有档位。默认的「手动」什么都不自动做：评论、CI、栈、接活都等你处理；「半自动」会把 PR 评论转给 session、不稳定的 CI 失败重跑一次、栈自动 rebase 并推送。不管哪一档，Butler 自己从不合并：合并要么是你在 GitHub 上点，要么是 session 要跑 <code>gh pr merge</code> 时你点了同意（除非你自己的 Claude Code 设置已经放行了它）。每一个对外动作都记在「审计」页上。</span>
+    <span class="en"><b>Settings › Automation</b> has a level. <b>Manual</b>, the default, does nothing on its own: comments, CI, stacks and intake wait for you; <b>Semi-automatic</b> passes PR comments to the session, reruns a flaky CI failure once, and rebases and pushes stacks. Either way, Butler never merges by itself: a merge is your click on GitHub, or your yes when a session asks to run <code>gh pr merge</code> (unless your own Claude Code settings already allow it). Every outward action is listed on the <b>Audit</b> page.</span>
   </div>
 </section>
 
@@ -612,7 +612,7 @@
     </div>
     <div class="fact">
       <h3><span class="zh">只在你点了之后改 Claude Code 配置</span><span class="en">Claude Code config changes only when you click</span></h3>
-      <p><span class="zh">点「安装」时，Butler 往用户级 <code>settings.json</code> 加四个 hook（第一次会先备份这个文件），再写一个 <code>/handoff</code> 命令，你原有的 hook 和命令都保留；「设置 → 健康检查 → 卸载」可以移除。记忆不用 <code>claude mcp add</code> 注册，而是在它启动的每个 session 上传 <code>--mcp-config</code>。</span><span class="en">When you click the hook install, Butler adds four hooks to your user-level <code>settings.json</code> (backing the file up the first time) and writes a <code>/handoff</code> command, keeping your other hooks and commands. <b>Settings → Health check → Uninstall</b> removes them. Memory is never registered with <code>claude mcp add</code>; Butler passes <code>--mcp-config</code> to each session it starts.</span></p>
+      <p><span class="zh">点安装 hook 时（向导里的「安装并继续」，或「设置 → 健康检查 → 安装 / 修复」），Butler 往用户级 <code>settings.json</code> 加四个 hook（第一次会先备份这个文件），再写一个 <code>/handoff</code> 命令，你原有的 hook 和命令都保留；「设置 → 健康检查 → 卸载」可以移除。记忆不用 <code>claude mcp add</code> 注册，而是在它启动的每个 session 上传 <code>--mcp-config</code>。</span><span class="en">When you click the hook install, Butler adds four hooks to your user-level <code>settings.json</code> (backing the file up the first time) and writes a <code>/handoff</code> command, keeping your other hooks and commands. <b>Settings → Health check → Uninstall</b> removes them. Memory is never registered with <code>claude mcp add</code>; Butler passes <code>--mcp-config</code> to each session it starts.</span></p>
     </div>
     <div class="fact">
       <h3><span class="zh">反馈由你自己发</span><span class="en">Feedback you send yourself</span></h3>
@@ -667,8 +667,8 @@
   </div>
   <div class="aside">
     <strong><span class="zh">第一次打开是一个两步的向导。</span><span class="en">The first launch opens a two-step wizard.</span></strong>
-    <span class="zh">第一步检查 Claude Code：在你的 <code>PATH</code> 和常见的安装位置找 <code>claude</code>，<code>claude</code> 或 <code>gh</code> 看起来没登录时会提示。第二步安装 hook 和 <code>/handoff</code> 命令：这些 hook 只往 Butler 的 <code>inbox</code> 文件夹里放小 JSON 文件，从不访问网络。哪一步过不去，点「卡住了？告诉我们」会打开预填好的 GitHub issue。tracker 工具和权限档案之后在设置页里配。升级就是下载新版本装在旧版上，<code>~/.butler</code> 里的数据保留。细节见 README 的 <a href="https://github.com/yul761/butler/blob/main/README.zh-CN.md#安装">安装</a> 和 <a href="https://github.com/yul761/butler/blob/main/README.zh-CN.md#首次运行">首次运行</a>。</span>
-    <span class="en">Step one checks Claude Code: it finds <code>claude</code> on your <code>PATH</code> or in the usual install folders, and tells you if <code>claude</code> or <code>gh</code> doesn't look logged in. Step two installs the hooks and the <code>/handoff</code> command; the hooks only drop small JSON files into Butler's <code>inbox</code> folder and never touch the network. If a step fails, <b>Stuck? Tell us</b> opens a prefilled GitHub issue. Tracker tools and the permission profile are set later in Settings. To upgrade, install the new version over the old one; your data in <code>~/.butler</code> is kept. Details are in the README's <a href="https://github.com/yul761/butler#install">Install</a> and <a href="https://github.com/yul761/butler#first-run">First run</a> sections.</span>
+    <span class="zh">第一步检查 Claude Code：在你的 <code>PATH</code> 和常见的安装位置找 <code>claude</code>，<code>claude</code> 或 <code>gh</code> 看起来没登录时会提示。第二步安装 hook 和 <code>/handoff</code> 命令：这些 hook 只往 Butler 的 <code>inbox</code> 文件夹里放小 JSON 文件，从不访问网络。哪一步过不去，点「卡住了？告诉我们」会打开反馈表单，帮你填好一个 GitHub issue。tracker 工具和权限档案之后在设置页里配。升级就是下载新版本装在旧版上，<code>~/.butler</code> 里的数据保留。细节见 README 的 <a href="https://github.com/yul761/butler/blob/main/README.zh-CN.md#安装">安装</a> 和 <a href="https://github.com/yul761/butler/blob/main/README.zh-CN.md#首次运行">首次运行</a>。</span>
+    <span class="en">Step one checks Claude Code: it finds <code>claude</code> on your <code>PATH</code> or in the usual install folders, and tells you if <code>claude</code> or <code>gh</code> doesn't look logged in. Step two installs the hooks and the <code>/handoff</code> command; the hooks only drop small JSON files into Butler's <code>inbox</code> folder and never touch the network. If a step fails, <b>Stuck? Tell us</b> opens the feedback form, which fills in a GitHub issue for you. Tracker tools and the permission profile are set later in Settings. To upgrade, install the new version over the old one; your data in <code>~/.butler</code> is kept. Details are in the README's <a href="https://github.com/yul761/butler#install">Install</a> and <a href="https://github.com/yul761/butler#first-run">First run</a> sections.</span>
   </div>
 </section>
 
@@ -740,12 +740,12 @@
 
   // ---------- sessions ----------
   var PILL = {
-    code:  { zh: "写代码",   en: "writing code" },
-    read:  { zh: "读代码",   en: "reading code" },
-    test:  { zh: "跑测试",   en: "running tests" },
-    ci:    { zh: "等 CI",    en: "watching CI" },
-    think: { zh: "思考中",   en: "thinking" },
-    ask:   { zh: "需要你",   en: "needs you" }
+    code:  { zh: "写代码",   en: "Writing code" },
+    read:  { zh: "看代码",   en: "Reading code" },
+    test:  { zh: "跑测试",   en: "Running tests" },
+    ci:    { zh: "监控 CI",  en: "Watching CI" },
+    think: { zh: "思考中",   en: "Thinking" },
+    ask:   { zh: "等你",     en: "Waiting for you" }
   };
   var SESS = [
     { id: "CART-12", repo: "api",  side: "left",  pill: "code",
@@ -958,7 +958,7 @@
     var cands = terms.filter(function (t) { return !t.busy && shown(t); }); if (!cands.length) return;
     var t = byId("CART-16"); if (t.busy || !shown(t)) t = cands[Math.floor(Math.random() * cands.length)];
     t.busy = true; askOn = true;
-    t.queue.push({ html: '<span class="q">? ' + (lang === "zh" ? "迁移会锁 orders 表约 2 秒，继续吗？(y/n)" : "Migration locks orders for ~2s. Continue? (y/n)") + '</span>', pill: "ask", done: function () {
+    t.queue.push({ html: '<span class="q">? ' + (lang === "zh" ? "现在跑迁移吗？会锁 orders 表约 2 秒 (y/n)" : "Run the migration now? It locks orders for ~2s (y/n)") + '</span>', pill: "ask", done: function () {
       t.el.classList.add("ask"); document.getElementById("needs").classList.add("on");
       setTimeout(function () {
         t.el.classList.remove("ask"); document.getElementById("needs").classList.remove("on");

@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Butler — one coordinator for your Claude Code sessions</title>
+<title>Shipherd — one coordinator for all your Claude Code sessions</title>
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#07090e">
-<meta name="description" content="Butler is an MIT-licensed desktop app for people who run several Claude Code sessions at once. Talk to one coordinator: it runs the sessions, one per ticket in its own worktree, and only pings you when it's your turn.">
+<meta name="description" content="Shipherd is an MIT-licensed desktop app for people who run several Claude Code sessions at once. Talk to one coordinator: it runs the sessions, one per ticket in its own worktree, and only pings you when it's your turn.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://butler.statecore.io/">
-<meta property="og:title" content="Butler — one coordinator for your Claude Code sessions">
+<meta property="og:url" content="https://shipherd.statecore.io/">
+<meta property="og:title" content="Shipherd — one coordinator for all your Claude Code sessions">
 <meta property="og:description" content="Talk to one coordinator. It runs your Claude Code sessions and only pings you when it's your turn. macOS and Windows, MIT licensed, local-first.">
-<meta property="og:image" content="https://butler.statecore.io/assets/og.png">
+<meta property="og:image" content="https://shipherd.statecore.io/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -21,12 +21,12 @@
   (function () {
     var lang = null;
     try { lang = new URLSearchParams(location.search).get("lang"); } catch (e) {}
-    if (lang !== "zh" && lang !== "en") { try { lang = localStorage.getItem("butler-lang"); } catch (e) {} }
+    if (lang !== "zh" && lang !== "en") { try { lang = localStorage.getItem("shipherd-lang"); } catch (e) {} }
     if (lang !== "zh" && lang !== "en") { lang = /^zh/i.test(navigator.language || "") ? "zh" : "en"; }
     var r = document.documentElement;
     r.className = "is-" + lang;
     r.lang = lang === "zh" ? "zh-CN" : "en";
-    if (lang === "zh") document.title = "Butler — 一个总控，管好你的 Claude Code session";
+    if (lang === "zh") document.title = "Shipherd — 一个总控，管好你的 Claude Code session";
   })();
 </script>
 <style>
@@ -327,9 +327,9 @@
 <div class="bgfx"></div><div class="grid"></div>
 
 <header class="topbar" id="top">
-  <a class="brand" href="#top"><img src="assets/apple-touch-icon.png" alt="" width="28" height="28">Butler</a>
+  <a class="brand" href="#top"><img src="assets/apple-touch-icon.png" alt="" width="28" height="28">Shipherd</a>
   <div class="right">
-    <a class="gh" href="https://github.com/yul761/butler">
+    <a class="gh" href="https://github.com/yul761/shipherd">
       <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
       <span>GitHub</span>
     </a>
@@ -352,15 +352,15 @@
     <span class="en">Talk to one coordinator.<br><span class="hl">It runs your Claude Code sessions and only pings you when it's your turn.</span></span>
   </h1>
   <p class="lede">
-    <span class="zh">你已经在好几个终端里开着 Claude Code，常常记不清哪个在等你。用 Butler，你把一块活讲给 epic 的总控听：它拆成几个 ticket，每个 ticket 有自己的 session 和 git worktree，要你处理的事都汇到一个页面上。</span>
-    <span class="en">You already run Claude Code in several terminals and lose track of which one is waiting on you. With Butler you describe a body of work to an epic coordinator. It splits the work into tickets, gives each ticket its own session and git worktree, and puts everything that needs you on one page.</span>
+    <span class="zh">你已经在好几个终端里开着 Claude Code，常常记不清哪个在等你。用 Shipherd，你把一块活讲给 epic 的总控听：它拆成几个 ticket，每个 ticket 有自己的 session 和 git worktree，要你处理的事都汇到一个页面上。</span>
+    <span class="en">You already run Claude Code in several terminals and lose track of which one is waiting on you. With Shipherd you describe a body of work to an epic coordinator. It splits the work into tickets, gives each ticket its own session and git worktree, and puts everything that needs you on one page.</span>
   </p>
   <div class="ctas">
-    <a class="cta primary" href="https://github.com/yul761/butler/releases/latest">
+    <a class="cta primary" href="https://github.com/yul761/shipherd/releases/latest">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
       <span class="zh">下载 macOS / Windows 版</span><span class="en">Download for macOS / Windows</span>
     </a>
-    <a class="cta ghost" href="https://github.com/yul761/butler">
+    <a class="cta ghost" href="https://github.com/yul761/shipherd">
       <span class="zh">在 GitHub 上看源码</span><span class="en">View source on GitHub</span>
     </a>
   </div>
@@ -388,8 +388,8 @@
   <p class="kicker"><span class="zh">实际用法</span><span class="en">How it's used</span></p>
   <h2><span class="zh">交出去的是一块活，不是一条提示词</span><span class="en">Hand over a body of work, not a prompt</span></h2>
   <p class="intro">
-    <span class="zh">只是并排开几个 session 的话，总控就是你自己：你来拆活，给每个 session 写提示词，盯着每个终端，还要想清楚哪个 PR 先合。在 Butler 里，这些交给 epic 的总控。它也是一个 Claude Code session，看得到这个 epic 的每个 ticket，你和它把活商量清楚就行。</span>
-    <span class="en">With sessions side by side, you are the coordinator: you split the work, write a prompt for each session, watch every terminal and work out which PR merges first. In Butler, an epic coordinator takes that over. It is a Claude Code session that sees every ticket of the epic, and you talk the work through with it.</span>
+    <span class="zh">只是并排开几个 session 的话，总控就是你自己：你来拆活，给每个 session 写提示词，盯着每个终端，还要想清楚哪个 PR 先合。在 Shipherd 里，这些交给 epic 的总控。它也是一个 Claude Code session，看得到这个 epic 的每个 ticket，你和它把活商量清楚就行。</span>
+    <span class="en">With sessions side by side, you are the coordinator: you split the work, write a prompt for each session, watch every terminal and work out which PR merges first. In Shipherd, an epic coordinator takes that over. It is a Claude Code session that sees every ticket of the epic, and you talk the work through with it.</span>
   </p>
   <figure class="shot demo">
     <span class="badge"><span class="zh">演示数据</span><span class="en">Demo data</span></span>
@@ -401,7 +401,7 @@
       <source media="(prefers-reduced-motion: reduce)" srcset="assets/demo-still-en.webp">
       <img src="assets/demo-en.webp" width="1280" height="768" loading="lazy" alt="Describe an epic to its coordinator; it splits the work into features and tickets, each ticket gets its own session and worktree, cards show up on Your turn, you merge the PR and the next ticket starts">
     </picture>
-    <figcaption><span class="zh">真实的 Butler 界面，用的是演示数据：把 epic 讲给总控，它拆成 feature 和 ticket，每个 ticket 有自己的 session 和 worktree；卡片出现在「轮到你」页，你合并 PR，接着做下一个。</span><span class="en">The real Butler UI with demo data: describe the epic, the coordinator splits it into features and tickets, and each ticket gets its own session and worktree. Cards show up on Your turn, you merge the PR, and the next ticket starts.</span></figcaption>
+    <figcaption><span class="zh">真实的 Shipherd 界面，用的是演示数据：把 epic 讲给总控，它拆成 feature 和 ticket，每个 ticket 有自己的 session 和 worktree；卡片出现在「轮到你」页，你合并 PR，接着做下一个。</span><span class="en">The real Shipherd UI with demo data: describe the epic, the coordinator splits it into features and tickets, and each ticket gets its own session and worktree. Cards show up on Your turn, you merge the PR, and the next ticket starts.</span></figcaption>
   </figure>
   <ol class="steps">
     <li class="step">
@@ -424,14 +424,14 @@
     <li class="step">
       <span class="num">4</span>
       <h3><span class="zh">你回答问题，点合并</span><span class="en">You answer, and you click merge</span></h3>
-      <p><span class="zh">提问、权限确认、可以合并的 PR，都变成「轮到你」页上的卡片。合并仍然由你来点。每个工作日在你选定的时间（默认 16:00），Butler 用你自己登录的 claude 给有动静的 ticket 写一份交接（handoff），作为它的状态。</span><span class="en">Questions, permission prompts and PRs ready to merge become cards on <b>Your turn</b>. You still click merge. Every working day, at a time you choose (4 pm by default), Butler asks your own logged-in <code>claude</code> to write a handoff for every ticket that had activity, which becomes its status.</span></p>
+      <p><span class="zh">提问、权限确认、可以合并的 PR，都变成「轮到你」页上的卡片。合并仍然由你来点。每个工作日在你选定的时间（默认 16:00），Shipherd 用你自己登录的 claude 给有动静的 ticket 写一份交接（handoff），作为它的状态。</span><span class="en">Questions, permission prompts and PRs ready to merge become cards on <b>Your turn</b>. You still click merge. Every working day, at a time you choose (4 pm by default), Shipherd asks your own logged-in <code>claude</code> to write a handoff for every ticket that had activity, which becomes its status.</span></p>
     </li>
   </ol>
 
   <div class="merge-wrap merge-grid">
     <div>
       <h3 class="sub-h"><span class="zh">合并之前先检查，分支不撞车</span><span class="en">Merges are checked, so branches don't collide</span></h3>
-      <p><span class="zh">Butler 盯着它开的 session，每次往目标分支合并之前都先用 git 检查。两个分支冲突时，先合的放行，另一个 ticket 合并前会被告知要先 rebase；和一个正在进行的合并冲突时，要等那个合完。</span><span class="en">Butler watches the sessions it opens and checks every merge into a target branch with git before it happens. When two branches conflict, the first to merge goes ahead and the other ticket is told to rebase before it merges; a merge that conflicts with one already under way waits until that one lands.</span></p>
+      <p><span class="zh">Shipherd 盯着它开的 session，每次往目标分支合并之前都先用 git 检查。两个分支冲突时，先合的放行，另一个 ticket 合并前会被告知要先 rebase；和一个正在进行的合并冲突时，要等那个合完。</span><span class="en">Shipherd watches the sessions it opens and checks every merge into a target branch with git before it happens. When two branches conflict, the first to merge goes ahead and the other ticket is told to rebase before it merges; a merge that conflicts with one already under way waits until that one lands.</span></p>
       <p><span class="zh">epic 页按 feature 的顺序列出 ticket，每一行写着现在轮到谁：你、agent，还是 CI 或某位 reviewer。</span><span class="en">The epic page lists the tickets by feature, in order, and each row says whose turn it is: yours, an agent's, or CI's or a reviewer's.</span></p>
     </div>
     <figure class="shot">
@@ -443,9 +443,9 @@
   </div>
 
   <div class="aside">
-    <strong><span class="zh">Butler 自己不登录任何 tracker。</span><span class="en">Butler has no tracker login of its own.</span></strong>
-    <span class="zh">Jira、Linear、GitLab 都由你自己的 Claude Code 通过它自己的 MCP 读取；PR 用你的 <code>gh</code> 读取。Butler 也没有自己的 Jira、GitHub 或 Claude 登录。</span>
-    <span class="en">Jira, Linear or GitLab are read by your own Claude Code through its own MCP servers; PRs are read with your <code>gh</code>. Butler has no Jira, GitHub or Claude login of its own.</span>
+    <strong><span class="zh">Shipherd 自己不登录任何 tracker。</span><span class="en">Shipherd has no tracker login of its own.</span></strong>
+    <span class="zh">Jira、Linear、GitLab 都由你自己的 Claude Code 通过它自己的 MCP 读取；PR 用你的 <code>gh</code> 读取。Shipherd 也没有自己的 Jira、GitHub 或 Claude 登录。</span>
+    <span class="en">Jira, Linear or GitLab are read by your own Claude Code through its own MCP servers; PRs are read with your <code>gh</code>. Shipherd has no Jira, GitHub or Claude login of its own.</span>
   </div>
 </section>
 
@@ -453,27 +453,27 @@
   <p class="kicker"><span class="zh">共享记忆</span><span class="en">Shared memory</span></p>
   <h2><span class="zh">session 之间共享记忆</span><span class="en">Sessions share memory</span></h2>
   <p class="intro">
-    <span class="zh">Butler 内置本地的 StateCore 记忆，它开的每个 session 都接上。session 用 <code>remember</code> 存，用 <code>recall</code> 读。epic 里一个 session 把约定存进 epic 记忆，比如一份 API 约定，Butler 会把它送进这个 epic 里其他正在跑的 session 的信箱。</span>
-    <span class="en">Butler embeds a local StateCore memory and connects every session it opens. A session saves with <code>remember</code> and reads with <code>recall</code>. When a session in an epic saves a convention to the epic's memory, such as an API contract, Butler delivers it to the mailboxes of the epic's other running sessions.</span>
+    <span class="zh">Shipherd 内置本地的 StateCore 记忆，它开的每个 session 都接上。session 用 <code>remember</code> 存，用 <code>recall</code> 读。epic 里一个 session 把约定存进 epic 记忆，比如一份 API 约定，Shipherd 会把它送进这个 epic 里其他正在跑的 session 的信箱。</span>
+    <span class="en">Shipherd embeds a local StateCore memory and connects every session it opens. A session saves with <code>remember</code> and reads with <code>recall</code>. When a session in an epic saves a convention to the epic's memory, such as an API contract, Shipherd delivers it to the mailboxes of the epic's other running sessions.</span>
   </p>
 
   <div class="layers">
     <div class="layer l-epic">
-      <div class="lh"><span class="lname"><span class="zh">epic 记忆</span><span class="en">Epic memory</span></span><code>butler-feature</code></div>
+      <div class="lh"><span class="lname"><span class="zh">epic 记忆</span><span class="en">Epic memory</span></span><code>shipherd-feature</code></div>
       <p><span class="zh">epic 里各个 ticket 共用的约定，比如 API 约定或命名规则，能放大约 60 条。总控和 epic 里每个 ticket 的 session 共用；新存的约定会送到其他正在跑的 session。epic 里的 feature 只是分组，没有自己的记忆。</span><span class="en">Conventions shared across the epic's tickets, such as an API contract or a naming rule; it holds about 60. The coordinator and every ticket session of the epic share it, and a new convention is delivered to the other running sessions. Features inside an epic are only groups and have no memory of their own.</span></p>
       <div class="tickets">
         <div class="layer l-ticket">
-          <div class="lh"><span class="lname"><span class="zh">ticket 记忆</span><span class="en">Ticket memory</span></span><code>butler-memory</code></div>
+          <div class="lh"><span class="lname"><span class="zh">ticket 记忆</span><span class="en">Ticket memory</span></span><code>shipherd-memory</code></div>
           <p><span class="zh">这个 ticket 的进度、决定、待办和每晚的交接。</span><span class="en">This ticket's progress, decisions, follow-ups and nightly handoffs.</span></p>
         </div>
         <div class="layer l-ticket">
-          <div class="lh"><span class="lname"><span class="zh">ticket 记忆</span><span class="en">Ticket memory</span></span><code>butler-memory</code></div>
+          <div class="lh"><span class="lname"><span class="zh">ticket 记忆</span><span class="en">Ticket memory</span></span><code>shipherd-memory</code></div>
           <p><span class="zh">每个 ticket 一份，它的几个 session 共用。</span><span class="en">One per ticket, shared by that ticket's sessions.</span></p>
         </div>
       </div>
     </div>
     <div class="layer l-ws">
-      <div class="lh"><span class="lname"><span class="zh">跨 ticket 的经验</span><span class="en">Cross-ticket learnings</span></span><code>butler-workspace</code></div>
+      <div class="lh"><span class="lname"><span class="zh">跨 ticket 的经验</span><span class="en">Cross-ticket learnings</span></span><code>shipherd-workspace</code></div>
       <p><span class="zh">在一个 ticket 里踩过的坑、摸清的环境细节，换到别的 ticket 也读得到。</span><span class="en">Gotchas and environment details learned in one ticket, readable from any other.</span></p>
     </div>
   </div>
@@ -488,7 +488,7 @@
         <div><span class="mem-w">⏺ remember("POST /v2/cart/coupon returns { total, discount } in cents")</span></div>
       </div>
     </div>
-    <div class="pair-arrow" aria-hidden="true"><span>butler-feature</span></div>
+    <div class="pair-arrow" aria-hidden="true"><span>shipherd-feature</span></div>
     <div class="term static read">
       <div class="th"><span class="lights"><i></i><i></i><i></i></span><span class="tid">CART-13</span><span class="repo">web</span><span class="pill">frontend</span></div>
       <div class="tb">
@@ -498,12 +498,12 @@
       </div>
     </div>
   </div>
-  <p class="caption"><span class="zh">后端 session 改完接口就记下一句。Butler 把它送进同一个 epic 里其他在跑的 session 的信箱，前端 session 在下一次调用工具时收到，照着改。中间不用人转述。</span><span class="en">The backend session notes the API change once it lands. Butler puts it in the mailbox of the epic's other running sessions, and the frontend session gets it at its next tool call and follows it. Nobody relays it by hand.</span></p>
+  <p class="caption"><span class="zh">后端 session 改完接口就记下一句。Shipherd 把它送进同一个 epic 里其他在跑的 session 的信箱，前端 session 在下一次调用工具时收到，照着改。中间不用人转述。</span><span class="en">The backend session notes the API change once it lands. Shipherd puts it in the mailbox of the epic's other running sessions, and the frontend session gets it at its next tool call and follows it. Nobody relays it by hand.</span></p>
 
   <div class="facts">
     <div class="fact">
       <h3><span class="zh">长 session 交接以后接着做</span><span class="en">Long sessions hand off and carry on</span></h3>
-      <p><span class="zh">session 的上下文太长时，Butler 先让它写一份交接，等记忆存好，再把它清空。清空后它从记忆里找回交接，接着做手上的事，而不是停下来等你下一句。</span><span class="en">When a session's context grows too long, Butler has it write a handoff, waits until memory has stored it, and clears the session. It recalls the handoff and carries on with what it was doing instead of waiting for your next instruction.</span></p>
+      <p><span class="zh">session 的上下文太长时，Shipherd 先让它写一份交接，等记忆存好，再把它清空。清空后它从记忆里找回交接，接着做手上的事，而不是停下来等你下一句。</span><span class="en">When a session's context grows too long, Shipherd has it write a handoff, waits until memory has stored it, and clears the session. It recalls the handoff and carries on with what it was doing instead of waiting for your next instruction.</span></p>
     </div>
     <div class="fact">
       <h3><span class="zh">总控看得到每个 session 在做什么</span><span class="en">The coordinator sees what every session is doing</span></h3>
@@ -522,67 +522,67 @@
   <div class="turn-grid">
     <div class="turn-copy">
       <p><span class="zh">session 需要你的时候，侧栏第一项「轮到你」页上就会出现一张卡片：用 <code>ask_user</code> 问你的问题、权限确认、可以合并的 PR、请你 review 的 PR、没人推进的 PR。「要我继续吗？」这种回复不算。</span><span class="en">Whenever a session needs you, a card shows up on <b>Your turn</b>, the first entry in the sidebar: a question asked with <code>ask_user</code>, a permission prompt, a PR ready to merge, a review requested from you, a PR nobody is on. A reply such as "Shall I continue?" doesn't count.</span></p>
-      <p><span class="zh">停住不动的 session 也有一张卡片。它的 transcript、输出和 CPU 都不再变化时，Butler 用你自己的 claude 问一次它是不是真卡住了；是的话，卡片上写出可能的原因，带「去看看」「开修复 session」「没事，忽略」。不经你点击，什么都不会去修。</span><span class="en">A session that has stopped moving gets a card too. When its transcript, output and CPU stop changing, Butler asks your own <code>claude</code> whether it is really stuck; if so, the card gives the likely cause with <b>Take a look</b>, <b>Open a fix session</b> and <b>It's fine, ignore</b>. Nothing is fixed without your click.</span></p>
+      <p><span class="zh">停住不动的 session 也有一张卡片。它的 transcript、输出和 CPU 都不再变化时，Shipherd 用你自己的 claude 问一次它是不是真卡住了；是的话，卡片上写出可能的原因，带「去看看」「开修复 session」「没事，忽略」。不经你点击，什么都不会去修。</span><span class="en">A session that has stopped moving gets a card too. When its transcript, output and CPU stop changing, Shipherd asks your own <code>claude</code> whether it is really stuck; if so, the card gives the likely cause with <b>Take a look</b>, <b>Open a fix session</b> and <b>It's fine, ignore</b>. Nothing is fixed without your click.</span></p>
       <p><span class="zh">点卡片上的按钮回答，答案会送进那个 session 的信箱；要多说几句，就在它的终端里打。卡片下面，「进行中」列出每个在跑的 session 在做什么，「运行情况」里有实况和一行近 7 天的 token 用量。</span><span class="en">Answer with a button on the card and it goes into the session's mailbox; for anything longer, type in its terminal. Below the cards, <b>In progress</b> lists what every running session is doing, and <b>How it is running</b> holds the Live view and a line of token usage for the last 7 days.</span></p>
     </div>
     <figure class="shot">
       <span class="badge"><span class="zh">演示数据</span><span class="en">Demo data</span></span>
-      <a class="zh" href="assets/your-turn-zh.webp" target="_blank" rel="noopener"><img src="assets/your-turn-zh.webp" width="1600" height="960" loading="lazy" alt="Butler 的「轮到你」页：一个带选项按钮的提问，和一个可以合并的 PR"></a>
-      <a class="en" href="assets/your-turn-en.webp" target="_blank" rel="noopener"><img src="assets/your-turn-en.webp" width="1600" height="960" loading="lazy" alt="Butler's Your turn page: a question with its options as buttons, and a PR ready to merge"></a>
-      <figcaption><span class="zh">真实的 Butler 界面，用的是演示数据。</span><span class="en">The real Butler UI with demo data.</span></figcaption>
+      <a class="zh" href="assets/your-turn-zh.webp" target="_blank" rel="noopener"><img src="assets/your-turn-zh.webp" width="1600" height="960" loading="lazy" alt="Shipherd 的「轮到你」页：一个带选项按钮的提问，和一个可以合并的 PR"></a>
+      <a class="en" href="assets/your-turn-en.webp" target="_blank" rel="noopener"><img src="assets/your-turn-en.webp" width="1600" height="960" loading="lazy" alt="Shipherd's Your turn page: a question with its options as buttons, and a PR ready to merge"></a>
+      <figcaption><span class="zh">真实的 Shipherd 界面，用的是演示数据。</span><span class="en">The real Shipherd UI with demo data.</span></figcaption>
     </figure>
   </div>
 </section>
 
 <section class="sec" id="compare">
   <p class="kicker"><span class="zh">和并排开 session 比</span><span class="en">Compared with sessions side by side</span></p>
-  <h2><span class="zh">别的工具管 session，Butler 管的是活</span><span class="en">Other tools manage sessions. Butler manages the work.</span></h2>
+  <h2><span class="zh">别的工具管 session，Shipherd 管的是活</span><span class="en">Other tools manage sessions. Shipherd manages the work.</span></h2>
   <p class="intro">
-    <span class="zh">同时开好几个 Claude Code session、每个跑在自己的 git worktree 里，现在已经很常见：Claude Code 官方桌面版能做，Conductor、Claude Squad 这类工具也能做。Butler 也这样跑 session，再把剩下落在你身上的活接过去。</span>
-    <span class="en">Running several Claude Code sessions side by side, each in its own git worktree, is common now: Claude Code's own desktop app does it, and so do tools like Conductor and Claude Squad. Butler runs sessions that way too, then takes over the jobs that are left to you.</span>
+    <span class="zh">同时开好几个 Claude Code session、每个跑在自己的 git worktree 里，现在已经很常见：Claude Code 官方桌面版能做，Conductor、Claude Squad 这类工具也能做。Shipherd 也这样跑 session，再把剩下落在你身上的活接过去。</span>
+    <span class="en">Running several Claude Code sessions side by side, each in its own git worktree, is common now: Claude Code's own desktop app does it, and so do tools like Conductor and Claude Squad. Shipherd runs sessions that way too, then takes over the jobs that are left to you.</span>
   </p>
   <div class="cmp">
-    <div class="cmp-row cmp-head"><div></div><div><span class="zh">并排开几个 session</span><span class="en">Sessions side by side</span></div><div>Butler</div></div>
+    <div class="cmp-row cmp-head"><div></div><div><span class="zh">并排开几个 session</span><span class="en">Sessions side by side</span></div><div>Shipherd</div></div>
     <div class="cmp-row">
       <div><span class="zh">你交出去的是</span><span class="en">What you hand over</span></div>
       <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">每个 session 一条提示词</span><span class="en">A prompt per session</span></div>
-      <div><span class="cmp-k">Butler</span><span class="zh">一个 epic，由总控拆成 ticket</span><span class="en">An epic, which the coordinator splits into tickets</span></div>
+      <div><span class="cmp-k">Shipherd</span><span class="zh">一个 epic，由总控拆成 ticket</span><span class="en">An epic, which the coordinator splits into tickets</span></div>
     </div>
     <div class="cmp-row">
       <div><span class="zh">谁来开 session</span><span class="en">Who opens the sessions</span></div>
       <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">你</span><span class="en">You</span></div>
-      <div><span class="cmp-k">Butler</span><span class="zh">epic 总控，或者你</span><span class="en">The epic coordinator, or you</span></div>
+      <div><span class="cmp-k">Shipherd</span><span class="zh">epic 总控，或者你</span><span class="en">The epic coordinator, or you</span></div>
     </div>
     <div class="cmp-row">
       <div><span class="zh">session 之间定下的事</span><span class="en">Decisions shared between sessions</span></div>
       <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">你自己抄过去</span><span class="en">You copy them across</span></div>
-      <div><span class="cmp-k">Butler</span><span class="zh">存进 epic 记忆，送到正在跑的 session</span><span class="en">Epic memory, delivered to the running sessions</span></div>
+      <div><span class="cmp-k">Shipherd</span><span class="zh">存进 epic 记忆，送到正在跑的 session</span><span class="en">Epic memory, delivered to the running sessions</span></div>
     </div>
     <div class="cmp-row">
       <div><span class="zh">问题在哪儿等你</span><span class="en">Where questions wait</span></div>
       <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">各个终端里</span><span class="en">In each terminal</span></div>
-      <div><span class="cmp-k">Butler</span><span class="zh">「轮到你」页上</span><span class="en">On the Your turn page</span></div>
+      <div><span class="cmp-k">Shipherd</span><span class="zh">「轮到你」页上</span><span class="en">On the Your turn page</span></div>
     </div>
     <div class="cmp-row">
       <div><span class="zh">合并顺序和冲突</span><span class="en">Merge order and conflicts</span></div>
       <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">你自己理</span><span class="en">You work them out</span></div>
-      <div><span class="cmp-k">Butler</span><span class="zh">feature 按顺序推；先合的放行，另一个合并前被告知要先 rebase</span><span class="en">Features in order; the first merge goes ahead, the other is told to rebase before merging</span></div>
+      <div><span class="cmp-k">Shipherd</span><span class="zh">feature 按顺序推；先合的放行，另一个合并前被告知要先 rebase</span><span class="en">Features in order; the first merge goes ahead, the other is told to rebase before merging</span></div>
     </div>
     <div class="cmp-row">
       <div><span class="zh">跑太久的 session</span><span class="en">A session that ran too long</span></div>
       <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">开个新的，从头再讲一遍</span><span class="en">You start a new one and explain again</span></div>
-      <div><span class="cmp-k">Butler</span><span class="zh">写交接、清空，从记忆里接着做</span><span class="en">Handed off, cleared and resumed from memory</span></div>
+      <div><span class="cmp-k">Shipherd</span><span class="zh">写交接、清空，从记忆里接着做</span><span class="en">Handed off, cleared and resumed from memory</span></div>
     </div>
     <div class="cmp-row">
       <div><span class="zh">想知道进展</span><span class="en">Knowing where things stand</span></div>
       <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">一个个看终端</span><span class="en">Read the terminals</span></div>
-      <div><span class="cmp-k">Butler</span><span class="zh">轮到谁、PR 阶段、每晚的状态</span><span class="en">Whose turn, PR stages, nightly status</span></div>
+      <div><span class="cmp-k">Shipherd</span><span class="zh">轮到谁、PR 阶段、每晚的状态</span><span class="en">Whose turn, PR stages, nightly status</span></div>
     </div>
   </div>
   <div class="aside">
     <strong><span class="zh">合并仍然由你来点。</span><span class="en">You still click merge.</span></strong>
-    <span class="zh">「设置 › 自动化」里有档位。默认的「手动」什么都不自动做：评论、CI、栈、接活都等你处理；「半自动」会把 PR 评论转给 session、不稳定的 CI 失败重跑一次、栈自动 rebase 并推送。不管哪一档，Butler 自己从不合并：合并要么是你在 GitHub 上点，要么是 session 要跑 <code>gh pr merge</code> 时你点了同意（除非你自己的 Claude Code 设置已经放行了它）。每一个对外动作都记在「审计」页上。</span>
-    <span class="en"><b>Settings › Automation</b> has a level. <b>Manual</b>, the default, does nothing on its own: comments, CI, stacks and intake wait for you; <b>Semi-automatic</b> passes PR comments to the session, reruns a flaky CI failure once, and rebases and pushes stacks. Either way, Butler never merges by itself: a merge is your click on GitHub, or your yes when a session asks to run <code>gh pr merge</code> (unless your own Claude Code settings already allow it). Every outward action is listed on the <b>Audit</b> page.</span>
+    <span class="zh">「设置 › 自动化」里有档位。默认的「手动」什么都不自动做：评论、CI、栈、接活都等你处理；「半自动」会把 PR 评论转给 session、不稳定的 CI 失败重跑一次、栈自动 rebase 并推送。不管哪一档，Shipherd 自己从不合并：合并要么是你在 GitHub 上点，要么是 session 要跑 <code>gh pr merge</code> 时你点了同意（除非你自己的 Claude Code 设置已经放行了它）。每一个对外动作都记在「审计」页上。</span>
+    <span class="en"><b>Settings › Automation</b> has a level. <b>Manual</b>, the default, does nothing on its own: comments, CI, stacks and intake wait for you; <b>Semi-automatic</b> passes PR comments to the session, reruns a flaky CI failure once, and rebases and pushes stacks. Either way, Shipherd never merges by itself: a merge is your click on GitHub, or your yes when a session asks to run <code>gh pr merge</code> (unless your own Claude Code settings already allow it). Every outward action is listed on the <b>Audit</b> page.</span>
   </div>
 </section>
 
@@ -590,13 +590,13 @@
   <p class="kicker"><span class="zh">本地优先</span><span class="en">Local-first</span></p>
   <h2><span class="zh">它是你电脑上的一个应用，不是一项服务</span><span class="en">An app on your computer, not a service</span></h2>
   <p class="intro">
-    <span class="zh">Butler 自己没有模型，也没有 API key：后台的活（交接、总结、卡住检测）都经你自己的 claude 做，用的是你自己的登录。它也不发遥测。</span>
-    <span class="en">Butler has no model or API key of its own: its background work (handoffs, summaries, stuck checks) runs through your own <code>claude</code>, signed in as you. It sends no telemetry.</span>
+    <span class="zh">Shipherd 自己没有模型，也没有 API key：后台的活（交接、总结、卡住检测）都经你自己的 claude 做，用的是你自己的登录。它也不发遥测。</span>
+    <span class="en">Shipherd has no model or API key of its own: its background work (handoffs, summaries, stuck checks) runs through your own <code>claude</code>, signed in as you. It sends no telemetry.</span>
   </p>
   <div class="facts six">
     <div class="fact">
       <h3><span class="zh">数据在本机的 SQLite 里</span><span class="en">Data in local SQLite</span></h3>
-      <p><span class="zh">ticket、session、交接、设置在 <code class="path">~/.butler/app.db</code>，记忆在 <code class="path">~/.butler/statecore/statecore.db</code>。装新版本时这些都保留。</span><span class="en">Tickets, sessions, handoffs and settings are in <code class="path">~/.butler/app.db</code>; memory is in <code class="path">~/.butler/statecore/statecore.db</code>. Both are kept when you install a new version.</span></p>
+      <p><span class="zh">ticket、session、交接、设置在 <code class="path">~/.shipherd/app.db</code>，记忆在 <code class="path">~/.shipherd/statecore/statecore.db</code>。装新版本时这些都保留。</span><span class="en">Tickets, sessions, handoffs and settings are in <code class="path">~/.shipherd/app.db</code>; memory is in <code class="path">~/.shipherd/statecore/statecore.db</code>. Both are kept when you install a new version.</span></p>
     </div>
     <div class="fact">
       <h3><span class="zh">数据怎么离开你的电脑</span><span class="en">How data leaves your machine</span></h3>
@@ -608,15 +608,15 @@
     </div>
     <div class="fact">
       <h3><span class="zh">联网代码由 lint 把关</span><span class="en">Network code, guarded by a lint rule</span></h3>
-      <p><span class="zh">除了通知 webhook 的发送，以及 127.0.0.1 上给共享 MCP 用的监听，Butler 没有自己的联网代码。这一点由一条 lint 规则保证。</span><span class="en">Apart from the notification webhook sender and the shared MCP's listener on 127.0.0.1, Butler has no network code of its own. A lint rule enforces this.</span></p>
+      <p><span class="zh">除了通知 webhook 的发送，以及 127.0.0.1 上给共享 MCP 用的监听，Shipherd 没有自己的联网代码。这一点由一条 lint 规则保证。</span><span class="en">Apart from the notification webhook sender and the shared MCP's listener on 127.0.0.1, Shipherd has no network code of its own. A lint rule enforces this.</span></p>
     </div>
     <div class="fact">
       <h3><span class="zh">只在你点了之后改 Claude Code 配置</span><span class="en">Claude Code config changes only when you click</span></h3>
-      <p><span class="zh">点安装 hook 时（向导里的「安装并继续」，或「设置 → 健康检查 → 安装 / 修复」），Butler 往用户级 <code>settings.json</code> 加四个 hook（第一次会先备份这个文件），再写一个 <code>/handoff</code> 命令，你原有的 hook 和命令都保留；「设置 → 健康检查 → 卸载」可以移除。记忆不用 <code>claude mcp add</code> 注册，而是在它启动的每个 session 上传 <code>--mcp-config</code>。</span><span class="en">When you click the hook install, Butler adds four hooks to your user-level <code>settings.json</code> (backing the file up the first time) and writes a <code>/handoff</code> command, keeping your other hooks and commands. <b>Settings → Health check → Uninstall</b> removes them. Memory is never registered with <code>claude mcp add</code>; Butler passes <code>--mcp-config</code> to each session it starts.</span></p>
+      <p><span class="zh">点安装 hook 时（向导里的「安装并继续」，或「设置 → 健康检查 → 安装 / 修复」），Shipherd 往用户级 <code>settings.json</code> 加四个 hook（第一次会先备份这个文件），再写一个 <code>/handoff</code> 命令，你原有的 hook 和命令都保留；「设置 → 健康检查 → 卸载」可以移除。记忆不用 <code>claude mcp add</code> 注册，而是在它启动的每个 session 上传 <code>--mcp-config</code>。</span><span class="en">When you click the hook install, Shipherd adds four hooks to your user-level <code>settings.json</code> (backing the file up the first time) and writes a <code>/handoff</code> command, keeping your other hooks and commands. <b>Settings → Health check → Uninstall</b> removes them. Memory is never registered with <code>claude mcp add</code>; Shipherd passes <code>--mcp-config</code> to each session it starts.</span></p>
     </div>
     <div class="fact">
       <h3><span class="zh">反馈由你自己发</span><span class="en">Feedback you send yourself</span></h3>
-      <p><span class="zh">「帮助 → 发送反馈…」（或「设置 → 关于」里的按钮）会在浏览器里打开填好的 GitHub issue，由你自己提交。诊断可选，脱敏后先给你看。Butler 自己不往外发任何东西。</span><span class="en"><b>Help → Send Feedback…</b> (or the button under <b>Settings → About</b>) opens a filled-in GitHub issue in your browser, and you submit it. Diagnostics are optional, redacted and shown to you first. Butler sends nothing on its own.</span></p>
+      <p><span class="zh">「帮助 → 发送反馈…」（或「设置 → 关于」里的按钮）会在浏览器里打开填好的 GitHub issue，由你自己提交。诊断可选，脱敏后先给你看。Shipherd 自己不往外发任何东西。</span><span class="en"><b>Help → Send Feedback…</b> (or the button under <b>Settings → About</b>) opens a filled-in GitHub issue in your browser, and you submit it. Diagnostics are optional, redacted and shown to you first. Shipherd sends nothing on its own.</span></p>
     </div>
   </div>
 </section>
@@ -629,7 +629,7 @@
     <span class="en">The installers are on the GitHub Releases page. The builds are not code-signed yet, so your browser and OS will warn you and the first launch needs one extra step. Here is how to allow it.</span>
   </p>
   <div class="install-top">
-    <a class="cta primary" href="https://github.com/yul761/butler/releases/latest">
+    <a class="cta primary" href="https://github.com/yul761/shipherd/releases/latest">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
       <span class="zh">去 Releases 下载最新版</span><span class="en">Get the latest release</span>
     </a>
@@ -646,66 +646,66 @@
   </div>
   <div class="os-grid">
     <div class="os">
-      <h3>macOS <span class="file">Butler-x.y.z-arm64.dmg</span></h3>
+      <h3>macOS <span class="file">Shipherd-x.y.z-arm64.dmg</span></h3>
       <ol>
-        <li><span class="zh">打开 <code>.dmg</code>，把 Butler 拖进「应用程序」。</span><span class="en">Open the <code>.dmg</code> and drag Butler into Applications.</span></li>
-        <li><span class="zh">打开 Butler，macOS 会拒绝，提示 Apple 无法验证这个 App。</span><span class="en">Open Butler. macOS refuses: it says Apple cannot verify the app.</span></li>
-        <li><span class="zh">打开「系统设置 → 隐私与安全性」，往下滚到关于 Butler 的提示，点「仍要打开」并确认。macOS 14 及更早版本上，也可以在「应用程序」里右键 Butler，选「打开」，再点一次「打开」。或者在终端里运行：</span><span class="en">Open <b>System Settings → Privacy &amp; Security</b>, scroll to the message about Butler, click <b>Open Anyway</b> and confirm. On macOS 14 and earlier you can instead right-click Butler in Applications, choose <b>Open</b>, then <b>Open</b> again. Or, in Terminal:</span></li>
+        <li><span class="zh">打开 <code>.dmg</code>，把 Shipherd 拖进「应用程序」。</span><span class="en">Open the <code>.dmg</code> and drag Shipherd into Applications.</span></li>
+        <li><span class="zh">打开 Shipherd，macOS 会拒绝，提示 Apple 无法验证这个 App。</span><span class="en">Open Shipherd. macOS refuses: it says Apple cannot verify the app.</span></li>
+        <li><span class="zh">打开「系统设置 → 隐私与安全性」，往下滚到关于 Shipherd 的提示，点「仍要打开」并确认。macOS 14 及更早版本上，也可以在「应用程序」里右键 Shipherd，选「打开」，再点一次「打开」。或者在终端里运行：</span><span class="en">Open <b>System Settings → Privacy &amp; Security</b>, scroll to the message about Shipherd, click <b>Open Anyway</b> and confirm. On macOS 14 and earlier you can instead right-click Shipherd in Applications, choose <b>Open</b>, then <b>Open</b> again. Or, in Terminal:</span></li>
       </ol>
-      <div class="cmd"><pre><code id="xattr-cmd">xattr -dr com.apple.quarantine /Applications/Butler.app</code></pre><button type="button" class="copy" data-copy="xattr-cmd"><span class="zh">复制</span><span class="en">Copy</span></button></div>
-      <p class="os-note"><span class="zh">如果 macOS 说 Butler「已损坏，无法打开」，就没有「仍要打开」按钮，用上面的终端命令。每次下载新版本后都要重复一遍。</span><span class="en">If macOS says Butler "is damaged and can't be opened", there is no Open Anyway button; use the Terminal command. Repeat this after every new download.</span></p>
+      <div class="cmd"><pre><code id="xattr-cmd">xattr -dr com.apple.quarantine /Applications/Shipherd.app</code></pre><button type="button" class="copy" data-copy="xattr-cmd"><span class="zh">复制</span><span class="en">Copy</span></button></div>
+      <p class="os-note"><span class="zh">如果 macOS 说 Shipherd「已损坏，无法打开」，就没有「仍要打开」按钮，用上面的终端命令。每次下载新版本后都要重复一遍。</span><span class="en">If macOS says Shipherd "is damaged and can't be opened", there is no Open Anyway button; use the Terminal command. Repeat this after every new download.</span></p>
     </div>
     <div class="os">
-      <h3>Windows <span class="file">Butler-Setup-x.y.z.exe</span></h3>
+      <h3>Windows <span class="file">Shipherd-Setup-x.y.z.exe</span></h3>
       <ol>
-        <li><span class="zh">运行 <code>Butler-Setup-x.y.z.exe</code>。如果 Edge 警告这个下载，在下载项的「…」菜单里选「保留」。</span><span class="en">Run <code>Butler-Setup-x.y.z.exe</code>. If Edge warns about the download, choose <b>Keep</b> in the download's <b>…</b> menu.</span></li>
+        <li><span class="zh">运行 <code>Shipherd-Setup-x.y.z.exe</code>。如果 Edge 警告这个下载，在下载项的「…」菜单里选「保留」。</span><span class="en">Run <code>Shipherd-Setup-x.y.z.exe</code>. If Edge warns about the download, choose <b>Keep</b> in the download's <b>…</b> menu.</span></li>
         <li><span class="zh">SmartScreen 提示「Windows 已保护你的电脑」时，点「更多信息 → 仍要运行」。</span><span class="en">When SmartScreen says "Windows protected your PC", click <b>More info → Run anyway</b>.</span></li>
         <li><span class="zh">选「仅为我安装」（不需要管理员权限）。</span><span class="en">Pick "only for me" (no admin rights needed).</span></li>
       </ol>
-      <p class="os-note"><span class="zh">如果开着 Windows 11 的「智能应用控制」，它会拦下未签名的应用，而且没法放行，开着它时装不了 Butler。关掉它之前请先看 Microsoft 的说明。</span><span class="en">If Windows 11 Smart App Control is on, it blocks unsigned apps with no way around it, so Butler can't be installed while it is on. Check Microsoft's documentation before you turn it off.</span></p>
+      <p class="os-note"><span class="zh">如果开着 Windows 11 的「智能应用控制」，它会拦下未签名的应用，而且没法放行，开着它时装不了 Shipherd。关掉它之前请先看 Microsoft 的说明。</span><span class="en">If Windows 11 Smart App Control is on, it blocks unsigned apps with no way around it, so Shipherd can't be installed while it is on. Check Microsoft's documentation before you turn it off.</span></p>
     </div>
   </div>
   <div class="aside">
     <strong><span class="zh">第一次打开是一个两步的向导。</span><span class="en">The first launch opens a two-step wizard.</span></strong>
-    <span class="zh">第一步检查 Claude Code：在你的 <code>PATH</code> 和常见的安装位置找 <code>claude</code>，<code>claude</code> 或 <code>gh</code> 看起来没登录时会提示。第二步安装 hook 和 <code>/handoff</code> 命令：这些 hook 只往 Butler 的 <code>inbox</code> 文件夹里放小 JSON 文件，从不访问网络。哪一步过不去，点「卡住了？告诉我们」会打开反馈表单，帮你填好一个 GitHub issue。tracker 工具和权限档案之后在设置页里配。升级就是下载新版本装在旧版上，<code>~/.butler</code> 里的数据保留。细节见 README 的 <a href="https://github.com/yul761/butler/blob/main/README.zh-CN.md#安装">安装</a> 和 <a href="https://github.com/yul761/butler/blob/main/README.zh-CN.md#首次运行">首次运行</a>。</span>
-    <span class="en">Step one checks Claude Code: it finds <code>claude</code> on your <code>PATH</code> or in the usual install folders, and tells you if <code>claude</code> or <code>gh</code> doesn't look logged in. Step two installs the hooks and the <code>/handoff</code> command; the hooks only drop small JSON files into Butler's <code>inbox</code> folder and never touch the network. If a step fails, <b>Stuck? Tell us</b> opens the feedback form, which fills in a GitHub issue for you. Tracker tools and the permission profile are set later in Settings. To upgrade, install the new version over the old one; your data in <code>~/.butler</code> is kept. Details are in the README's <a href="https://github.com/yul761/butler#install">Install</a> and <a href="https://github.com/yul761/butler#first-run">First run</a> sections.</span>
+    <span class="zh">第一步检查 Claude Code：在你的 <code>PATH</code> 和常见的安装位置找 <code>claude</code>，<code>claude</code> 或 <code>gh</code> 看起来没登录时会提示。第二步安装 hook 和 <code>/handoff</code> 命令：这些 hook 只往 Shipherd 的 <code>inbox</code> 文件夹里放小 JSON 文件，从不访问网络。哪一步过不去，点「卡住了？告诉我们」会打开反馈表单，帮你填好一个 GitHub issue。tracker 工具和权限档案之后在设置页里配。升级就是下载新版本装在旧版上，<code>~/.shipherd</code> 里的数据保留。细节见 README 的 <a href="https://github.com/yul761/shipherd/blob/main/README.zh-CN.md#安装">安装</a> 和 <a href="https://github.com/yul761/shipherd/blob/main/README.zh-CN.md#首次运行">首次运行</a>。</span>
+    <span class="en">Step one checks Claude Code: it finds <code>claude</code> on your <code>PATH</code> or in the usual install folders, and tells you if <code>claude</code> or <code>gh</code> doesn't look logged in. Step two installs the hooks and the <code>/handoff</code> command; the hooks only drop small JSON files into Shipherd's <code>inbox</code> folder and never touch the network. If a step fails, <b>Stuck? Tell us</b> opens the feedback form, which fills in a GitHub issue for you. Tracker tools and the permission profile are set later in Settings. To upgrade, install the new version over the old one; your data in <code>~/.shipherd</code> is kept. Details are in the README's <a href="https://github.com/yul761/shipherd#install">Install</a> and <a href="https://github.com/yul761/shipherd#first-run">First run</a> sections.</span>
   </div>
 </section>
 
 <section class="sec" id="end">
   <p class="end-line"><span class="zh">如果你也同时开着好几个 Claude Code、已经顾不过来，可以试试看。</span><span class="en">If you run several Claude Code sessions and keep losing track of them, give it a try.</span></p>
   <div class="ctas">
-    <a class="cta primary" href="https://github.com/yul761/butler/releases/latest">
+    <a class="cta primary" href="https://github.com/yul761/shipherd/releases/latest">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
       <span class="zh">下载</span><span class="en">Download</span>
     </a>
-    <a class="cta ghost" href="https://github.com/yul761/butler">GitHub</a>
+    <a class="cta ghost" href="https://github.com/yul761/shipherd">GitHub</a>
   </div>
-  <p class="fine"><span class="zh">有问题或想法？去 <a href="https://github.com/yul761/butler/discussions">GitHub Discussions</a> 问，或者在 Butler 里用「帮助 → 发送反馈…」。</span><span class="en">Questions or ideas? Ask in <a href="https://github.com/yul761/butler/discussions">GitHub Discussions</a>, or use Help → Send Feedback… in Butler.</span></p>
+  <p class="fine"><span class="zh">有问题或想法？去 <a href="https://github.com/yul761/shipherd/discussions">GitHub Discussions</a> 问，或者在 Shipherd 里用「帮助 → 发送反馈…」。</span><span class="en">Questions or ideas? Ask in <a href="https://github.com/yul761/shipherd/discussions">GitHub Discussions</a>, or use Help → Send Feedback… in Shipherd.</span></p>
 </section>
 </main>
 
 <footer class="site-foot">
-  <span><span class="zh">Butler · MIT 开源 · 作者 Yuchen Lin · 本页对应 Butler 4.1</span><span class="en">Butler · MIT licensed · made by Yuchen Lin · this page describes Butler 4.1</span></span>
-  <span><a href="https://github.com/yul761/butler">GitHub</a> · <a class="zh" href="https://github.com/yul761/butler/blob/main/docs/how-it-works.zh-CN.md">工作原理</a><a class="en" href="https://github.com/yul761/butler/blob/main/docs/how-it-works.md">How it works</a> · <a href="https://github.com/yul761/butler/releases"><span class="zh">更新记录</span><span class="en">Release notes</span></a> · <a href="https://github.com/yul761/butler/releases/latest"><span class="zh">下载</span><span class="en">Download</span></a></span>
+  <span><span class="zh">Shipherd · MIT 开源 · 作者 Yuchen Lin · 本页对应 Shipherd 4.1</span><span class="en">Shipherd · MIT licensed · made by Yuchen Lin · this page describes Shipherd 4.1</span></span>
+  <span><a href="https://github.com/yul761/shipherd">GitHub</a> · <a class="zh" href="https://github.com/yul761/shipherd/blob/main/docs/how-it-works.zh-CN.md">工作原理</a><a class="en" href="https://github.com/yul761/shipherd/blob/main/docs/how-it-works.md">How it works</a> · <a href="https://github.com/yul761/shipherd/releases"><span class="zh">更新记录</span><span class="en">Release notes</span></a> · <a href="https://github.com/yul761/shipherd/releases/latest"><span class="zh">下载</span><span class="en">Download</span></a></span>
 </footer>
 
 <script>
   (function () {
     var meta = {
-      en: { title: "Butler — one coordinator for your Claude Code sessions", lang: "en" },
-      zh: { title: "Butler — 一个总控，管好你的 Claude Code session", lang: "zh-CN" }
+      en: { title: "Shipherd — one coordinator for all your Claude Code sessions", lang: "en" },
+      zh: { title: "Shipherd — 一个总控，管好你的 Claude Code session", lang: "zh-CN" }
     };
     var root = document.documentElement;
-    window.butlerLang = function () { return root.classList.contains("is-zh") ? "zh" : "en"; };
+    window.shipherdLang = function () { return root.classList.contains("is-zh") ? "zh" : "en"; };
     window.setLang = function (lang, remember) {
       if (lang !== "zh" && lang !== "en") return;
       root.classList.remove("is-en", "is-zh");
       root.classList.add("is-" + lang);
       root.lang = meta[lang].lang;
       document.title = meta[lang].title;
-      if (remember) { try { localStorage.setItem("butler-lang", lang); } catch (e) {} }
-      document.dispatchEvent(new CustomEvent("butler:lang", { detail: lang }));
+      if (remember) { try { localStorage.setItem("shipherd-lang", lang); } catch (e) {} }
+      document.dispatchEvent(new CustomEvent("shipherd:lang", { detail: lang }));
     };
     document.querySelectorAll(".lang button").forEach(function (b) {
       b.addEventListener("click", function () { window.setLang(b.getAttribute("data-lang"), true); });
@@ -730,8 +730,8 @@
 <script>
 (function () {
   // ---------- language ----------
-  var lang = window.butlerLang();
-  document.addEventListener("butler:lang", function (e) {
+  var lang = window.shipherdLang();
+  document.addEventListener("shipherd:lang", function (e) {
     lang = e.detail;
     renderNotes();
     terms.forEach(function (t) { setPill(t, t.pillKind); });

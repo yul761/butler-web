@@ -1,13 +1,13 @@
-# butler-web
+# shipherd-web
 
-The landing page for [Butler](https://github.com/yul761/butler) at https://butler.statecore.io — a single static,
+The landing page for [Shipherd](https://github.com/yul761/shipherd) at https://shipherd.statecore.io — a single static,
 bilingual (EN / 中文) page. No build step: `index.html` plus `assets/`.
 
-- Language: `?lang=en|zh` wins, then the visitor's last manual choice (localStorage `butler-lang`),
+- Language: `?lang=en|zh` wins, then the visitor's last manual choice (localStorage `shipherd-lang`),
   then the browser language (`zh*` → Chinese, anything else → English).
 - No runtime third-party requests: no CDN fonts, analytics or GitHub API. Everything is in `assets/`.
-- The copy follows Butler's README and docs on `main`; the footer says which version the page describes (now 4.1).
-- Deployed on Vercel. DNS: `butler` CNAME in Namecheap for statecore.io.
+- The copy follows Shipherd's README and docs on `main`; the footer says which version the page describes (now 4.1).
+- Deployed on Vercel. DNS: `shipherd` CNAME in Namecheap for statecore.io.
 
 Preview locally: `python3 -m http.server 8765` and open http://localhost:8765/.
 
@@ -18,12 +18,12 @@ and `node --test tools/*.test.mjs`. Put real project or company names that must 
 ## Updating the screenshots and demo animation
 
 The images in `assets/` (`demo-*.webp`, `demo-still-*.webp`, `epic-*.webp`, `your-turn-*.webp`, in `en` and `zh`)
-are Butler's own demo media: the real UI with demo data (an epic "Offline mode" in a made-up `fernleaf-notes` org).
-They are recorded in the Butler repo with `pnpm demo:record` into `docs/media/` (see Butler's `docs/demo-media.md`).
+are Shipherd's own demo media: the real UI with demo data (an epic "Offline mode" in a made-up `fernleaf-notes` org).
+They are recorded in the Shipherd repo with `pnpm demo:record` into `docs/media/` (see Shipherd's `docs/demo-media.md`).
 To bring a new recording over:
 
 ```sh
-tools/import-media.sh /path/to/butler   # reads docs/media from origin/main with git show
+tools/import-media.sh /path/to/shipherd   # reads docs/media from origin/main with git show
 ```
 
 Needs `cwebp`, `gif2webp` and `ffmpeg` on `PATH` (`brew install webp ffmpeg`). Look over the new images before

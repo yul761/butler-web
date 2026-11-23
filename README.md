@@ -6,7 +6,7 @@ bilingual (EN / 中文) page. No build step: `index.html` plus `assets/`.
 - Language: `?lang=en|zh` wins, then the visitor's last manual choice (localStorage `shipherd-lang`),
   then the browser language (`zh*` → Chinese, anything else → English).
 - No runtime third-party requests: no CDN fonts, analytics or GitHub API. Everything is in `assets/`.
-- The copy follows Shipherd's README and docs on `main`; the footer says which version the page describes (now 4.1).
+- The copy follows Shipherd's README and docs on `main`; the footer says which version the page describes (now 4.2).
 - Deployed on Vercel. DNS: `shipherd` CNAME in Namecheap for statecore.io.
 
 Preview locally: `python3 -m http.server 8765` and open http://localhost:8765/.

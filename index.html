@@ -129,7 +129,7 @@
   .tb { height: 74px; padding: 6px 11px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11.5px; line-height: 16px; color: #b9c0cf; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; }
   .tb div { flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .tb .tool { color: #e6e9f0; } .tb .tool b { color: var(--blue-2); font-weight: 600; }
-  .tb .ok { color: #7ee0a8; } .tb .dim { color: #6b7385; }
+  .tb .ok { color: #7ee0a8; } .tb .dim { color: #8f98ab; }
   .tb .mem-w { color: #9cc0ff; } .tb .mem-r { color: #8ef0b8; } .tb .q { color: var(--amber); }
   .caret { display: inline-block; width: 6px; height: 12px; background: #b9c0cf; vertical-align: -2px; margin-left: 1px; animation: blink 1s steps(1) infinite; }
 
@@ -285,12 +285,6 @@
   .os h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
   .os .file { font-family: var(--mono); font-size: 12.5px; font-weight: 500; color: var(--muted); overflow-wrap: anywhere; }
   .os b { color: var(--ink); font-weight: 600; }
-  .cmd { display: flex; align-items: center; gap: 8px; margin: 12px 0 0; padding: 6px 6px 6px 14px; background: #04060a; border: 1px solid var(--line-2); border-radius: 10px; }
-  .cmd pre { flex: 1; min-width: 0; margin: 0; padding: 6px 0; overflow-x: auto; }
-  .cmd pre code { background: none; border: 0; padding: 0; font-size: 13px; color: var(--green-2); white-space: pre-wrap; overflow-wrap: anywhere; }
-  .copy { flex: none; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--ink-2); background: rgba(255,255,255,.06);
-    border: 1px solid var(--line-2); border-radius: 7px; padding: 4px 10px; cursor: pointer; }
-  .copy:hover { color: var(--ink); background: rgba(255,255,255,.1); }
   .sec .os p.os-note { margin: 12px 0 0; font-size: 13.5px; color: var(--muted); line-height: 1.6; }
 
   /* ---------- end ---------- */
@@ -334,8 +328,8 @@
       <span>GitHub</span>
     </a>
     <div class="lang" role="group" aria-label="Language">
-      <button type="button" data-lang="en">EN</button>
-      <button type="button" data-lang="zh">中文</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      <button type="button" data-lang="zh" aria-pressed="false">中文</button>
     </div>
   </div>
 </header>
@@ -431,7 +425,7 @@
   <div class="merge-wrap merge-grid">
     <div>
       <h3 class="sub-h"><span class="zh">合并之前先检查，分支不撞车</span><span class="en">Merges are checked, so branches don't collide</span></h3>
-      <p><span class="zh">Shipherd 盯着它开的 session，每次往目标分支合并之前都先用 git 检查。两个分支冲突时，先合的放行，另一个 ticket 合并前会被告知要先 rebase；和一个正在进行的合并冲突时，要等那个合完。</span><span class="en">Shipherd watches the sessions it opens and checks every merge into a target branch with git before it happens. When two branches conflict, the first to merge goes ahead and the other ticket is told to rebase before it merges; a merge that conflicts with one already under way waits until that one lands.</span></p>
+      <p><span class="zh">Shipherd 开的 session 要往目标分支合并时（<code>gh pr merge</code>、<code>git merge</code> 或推到目标分支），Shipherd 先用 git 检查。两个分支冲突时，先合的放行，另一个 ticket 合并前会被告知要先 rebase；和一个正在进行的合并冲突时，要等那个合完。你在 GitHub 网页上点的合并、在自己开的终端里跑的合并，都不经过这道检查。</span><span class="en">When a session Shipherd opened is about to merge into a target branch (<code>gh pr merge</code>, <code>git merge</code> or a push to the target branch), Shipherd checks it with git first. When two branches conflict, the first to merge goes ahead and the other ticket is told to rebase before it merges; a merge that conflicts with one already under way waits until that one lands. Merges you click on GitHub or run in a terminal you opened yourself aren't checked.</span></p>
       <p><span class="zh">epic 页按 feature 的顺序列出 ticket，每一行写着现在轮到谁：你、agent，还是 CI 或某位 reviewer。</span><span class="en">The epic page lists the tickets by feature, in order, and each row says whose turn it is: yours, an agent's, or CI's or a reviewer's.</span></p>
     </div>
     <figure class="shot">
@@ -464,7 +458,7 @@
       <div class="tickets">
         <div class="layer l-ticket">
           <div class="lh"><span class="lname"><span class="zh">ticket 记忆</span><span class="en">Ticket memory</span></span><code>shipherd-memory</code></div>
-          <p><span class="zh">这个 ticket 的进度、决定、待办和每晚的交接。</span><span class="en">This ticket's progress, decisions, follow-ups and nightly handoffs.</span></p>
+          <p><span class="zh">这个 ticket 的进度、决定、待办和每个工作日的交接。</span><span class="en">This ticket's progress, decisions, follow-ups and the handoff written each working day.</span></p>
         </div>
         <div class="layer l-ticket">
           <div class="lh"><span class="lname"><span class="zh">ticket 记忆</span><span class="en">Ticket memory</span></span><code>shipherd-memory</code></div>
@@ -576,7 +570,7 @@
     <div class="cmp-row">
       <div><span class="zh">想知道进展</span><span class="en">Knowing where things stand</span></div>
       <div><span class="cmp-k"><span class="zh">并排开</span><span class="en">Side by side</span></span><span class="zh">一个个看终端</span><span class="en">Read the terminals</span></div>
-      <div><span class="cmp-k">Shipherd</span><span class="zh">轮到谁、PR 阶段、每晚的状态</span><span class="en">Whose turn, PR stages, nightly status</span></div>
+      <div><span class="cmp-k">Shipherd</span><span class="zh">轮到谁、PR 阶段、每个工作日一份状态</span><span class="en">Whose turn, PR stages, a status each working day</span></div>
     </div>
   </div>
   <div class="aside">
@@ -623,10 +617,10 @@
 
 <section class="sec" id="install">
   <p class="kicker"><span class="zh">安装</span><span class="en">Install</span></p>
-  <h2><span class="zh">下载、放行、跑一遍向导</span><span class="en">Download, allow it, run the wizard</span></h2>
+  <h2><span class="zh">下载、安装、跑一遍向导</span><span class="en">Download, install, run the wizard</span></h2>
   <p class="intro">
-    <span class="zh">安装包在 GitHub 的 Releases 页上。目前的构建还没有代码签名，所以浏览器和系统都会提醒你，第一次打开要多做一步，下面写了怎么放行。</span>
-    <span class="en">The installers are on the GitHub Releases page. The builds are not code-signed yet, so your browser and OS will warn you and the first launch needs one extra step. Here is how to allow it.</span>
+    <span class="zh">安装包在 GitHub 的 Releases 页上。macOS 版已签名并经 Apple 公证，双击打开即可。Windows 版还没有代码签名，浏览器和系统会提醒你，第一次安装要多做一步，下面写了怎么放行。</span>
+    <span class="en">The installers are on the GitHub Releases page. The macOS build is signed and notarized by Apple, so it opens with a double-click. The Windows installer is not code-signed yet, so your browser and Windows will warn you and the first install needs one extra step. Here is how to allow it.</span>
   </p>
   <div class="install-top">
     <a class="cta primary" href="https://github.com/yul761/shipherd/releases/latest">
@@ -646,14 +640,11 @@
   </div>
   <div class="os-grid">
     <div class="os">
-      <h3>macOS <span class="file">Shipherd-x.y.z-arm64.dmg</span></h3>
+      <h3>macOS <span class="file">Shipherd-x.y.z-arm64.dmg</span><span class="file">Shipherd-x.y.z-arm64-mac.zip</span></h3>
       <ol>
-        <li><span class="zh">打开 <code>.dmg</code>，把 Shipherd 拖进「应用程序」。</span><span class="en">Open the <code>.dmg</code> and drag Shipherd into Applications.</span></li>
-        <li><span class="zh">打开 Shipherd，macOS 会拒绝，提示 Apple 无法验证这个 App。</span><span class="en">Open Shipherd. macOS refuses: it says Apple cannot verify the app.</span></li>
-        <li><span class="zh">打开「系统设置 → 隐私与安全性」，往下滚到关于 Shipherd 的提示，点「仍要打开」并确认。macOS 14 及更早版本上，也可以在「应用程序」里右键 Shipherd，选「打开」，再点一次「打开」。或者在终端里运行：</span><span class="en">Open <b>System Settings → Privacy &amp; Security</b>, scroll to the message about Shipherd, click <b>Open Anyway</b> and confirm. On macOS 14 and earlier you can instead right-click Shipherd in Applications, choose <b>Open</b>, then <b>Open</b> again. Or, in Terminal:</span></li>
+        <li><span class="zh">打开 <code>.dmg</code>，把 Shipherd 拖进「应用程序」。用 <code>.zip</code> 的话，解压后把 <code>Shipherd.app</code> 拖进「应用程序」。</span><span class="en">Open the <code>.dmg</code> and drag Shipherd into Applications. With the <code>.zip</code>, unzip it and drag <code>Shipherd.app</code> into Applications.</span></li>
+        <li><span class="zh">双击打开 Shipherd。它已用 Developer ID 签名并经 Apple 公证，不用额外放行；第一次打开时 macOS 照常问一句是否打开从互联网下载的 App，点「打开」。</span><span class="en">Double-click Shipherd. It is signed with Developer ID and notarized by Apple, so there is nothing to allow; the first time, macOS asks as usual whether to open an app downloaded from the internet. Click <b>Open</b>.</span></li>
       </ol>
-      <div class="cmd"><pre><code id="xattr-cmd">xattr -dr com.apple.quarantine /Applications/Shipherd.app</code></pre><button type="button" class="copy" data-copy="xattr-cmd"><span class="zh">复制</span><span class="en">Copy</span></button></div>
-      <p class="os-note"><span class="zh">如果 macOS 说 Shipherd「已损坏，无法打开」，就没有「仍要打开」按钮，用上面的终端命令。每次下载新版本后都要重复一遍。</span><span class="en">If macOS says Shipherd "is damaged and can't be opened", there is no Open Anyway button; use the Terminal command. Repeat this after every new download.</span></p>
     </div>
     <div class="os">
       <h3>Windows <span class="file">Shipherd-Setup-x.y.z.exe</span></h3>
@@ -686,7 +677,7 @@
 </main>
 
 <footer class="site-foot">
-  <span><span class="zh">Shipherd · MIT 开源 · 作者 Yuchen Lin · 本页对应 Shipherd 4.1</span><span class="en">Shipherd · MIT licensed · made by Yuchen Lin · this page describes Shipherd 4.1</span></span>
+  <span><span class="zh">Shipherd · MIT 开源 · 作者 Yuchen Lin · 本页对应 Shipherd 4.2</span><span class="en">Shipherd · MIT licensed · made by Yuchen Lin · this page describes Shipherd 4.2</span></span>
   <span><a href="https://github.com/yul761/shipherd">GitHub</a> · <a class="zh" href="https://github.com/yul761/shipherd/blob/main/docs/how-it-works.zh-CN.md">工作原理</a><a class="en" href="https://github.com/yul761/shipherd/blob/main/docs/how-it-works.md">How it works</a> · <a href="https://github.com/yul761/shipherd/releases"><span class="zh">更新记录</span><span class="en">Release notes</span></a> · <a href="https://github.com/yul761/shipherd/releases/latest"><span class="zh">下载</span><span class="en">Download</span></a></span>
 </footer>
 
@@ -697,6 +688,10 @@
       zh: { title: "Shipherd — 一个总控，管好你的 Claude Code session", lang: "zh-CN" }
     };
     var root = document.documentElement;
+    var langButtons = document.querySelectorAll(".lang button");
+    function syncPressed(lang) {
+      langButtons.forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-lang") === lang ? "true" : "false"); });
+    }
     window.shipherdLang = function () { return root.classList.contains("is-zh") ? "zh" : "en"; };
     window.setLang = function (lang, remember) {
       if (lang !== "zh" && lang !== "en") return;
@@ -704,28 +699,15 @@
       root.classList.add("is-" + lang);
       root.lang = meta[lang].lang;
       document.title = meta[lang].title;
+      syncPressed(lang);
       if (remember) { try { localStorage.setItem("shipherd-lang", lang); } catch (e) {} }
       document.dispatchEvent(new CustomEvent("shipherd:lang", { detail: lang }));
     };
-    document.querySelectorAll(".lang button").forEach(function (b) {
+    langButtons.forEach(function (b) {
       b.addEventListener("click", function () { window.setLang(b.getAttribute("data-lang"), true); });
     });
+    syncPressed(window.shipherdLang());
   })();
-</script>
-<script>
-  // Copy buttons: copy the text of the element named by data-copy, then say so on the button for a moment.
-  document.querySelectorAll(".copy[data-copy]").forEach(function (b) {
-    var spans = b.querySelectorAll("span"), idle = [spans[0].textContent, spans[1].textContent], timer = null;
-    b.addEventListener("click", function () {
-      var el = document.getElementById(b.getAttribute("data-copy"));
-      if (!el || !navigator.clipboard) return;
-      navigator.clipboard.writeText(el.textContent).then(function () {
-        spans[0].textContent = "已复制"; spans[1].textContent = "Copied";
-        clearTimeout(timer);
-        timer = setTimeout(function () { spans[0].textContent = idle[0]; spans[1].textContent = idle[1]; }, 1500);
-      }, function () {});
-    });
-  });
 </script>
 <script>
 (function () {

@@ -10,8 +10,8 @@ test("external stylesheet is reported", () => assert.equal(findExternalLoads('<l
 test("external image is reported", () => assert.equal(findExternalLoads('<img src="http://x.com/a.png">').length, 1));
 test("protocol-relative css url is reported", () => assert.equal(findExternalLoads("<style>a{background:url(//x.com/i.png)}</style>").length, 1));
 test("fetch call is reported", () => assert.equal(findExternalLoads("<script>fetch('/x')</script>").length, 1));
-test("outbound <a> link is allowed", () => assert.deepEqual(findExternalLoads('<a href="https://github.com/yul761/butler">x</a>'), []));
-test("og meta absolute url is allowed", () => assert.deepEqual(findExternalLoads('<meta property="og:image" content="https://butler.statecore.io/assets/og.png">'), []));
+test("outbound <a> link is allowed", () => assert.deepEqual(findExternalLoads('<a href="https://github.com/yul761/shipherd">x</a>'), []));
+test("og meta absolute url is allowed", () => assert.deepEqual(findExternalLoads('<meta property="og:image" content="https://shipherd.statecore.io/assets/og.png">'), []));
 test("local assets are allowed", () => assert.deepEqual(findExternalLoads('<img src="assets/a.webp"><link rel="icon" href="assets/favicon.png">'), []));
 
 test("banned phrase matched in text, case-insensitive", () =>
